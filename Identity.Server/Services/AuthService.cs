@@ -63,12 +63,12 @@ namespace Identity.Server.Services
 
             if (result.Succeeded)
             {
-                await this.userManager.AddToRoleAsync(user, "client");
+                await this.userManager.AddToRoleAsync(user, userRole);
 
                 await this.signInManager.SignInAsync(user, isPersistent: false);
 
                 var claims = new List<Claim>();
-                claims.Add(new Claim(ClaimTypes.Role, "client"));
+                claims.Add(new Claim(ClaimTypes.Role, userRole));
                 claims.Add(new Claim(ClaimTypes.Actor, user.Id.ToString()));
                 claims.Add(new Claim(ClaimTypes.Email, user.Email));
 
