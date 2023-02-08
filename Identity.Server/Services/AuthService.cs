@@ -35,7 +35,7 @@ namespace Identity.Server.Services
             var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                throw new UserNotFoundException("User not found.");
+                throw new UserNotFoundException();
             }
 
             var refreshTokenFromDb = await this.userManager.GetAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken");
@@ -87,7 +87,7 @@ namespace Identity.Server.Services
 
             if (user == null)
             {
-                throw new UserNotFoundException("User not found.");
+                throw new UserNotFoundException();
             }
 
             var result = await this.signInManager.PasswordSignInAsync(user, password, false, false);

@@ -3,7 +3,6 @@
 namespace Identity.Server.Models
 {
     using System.ComponentModel.DataAnnotations;
-    using System.Diagnostics.CodeAnalysis;
 
     public class LogInUserDto
     {
