@@ -27,6 +27,7 @@ namespace Identity.Server.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto userDto)
         {
+            if (userDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body.")); }
             if (userDto.Email == null) { return this.BadRequest(new ErrorResponse("Email cannot be null.")); }
             if (userDto.Password == null) { return this.BadRequest(new ErrorResponse("Password cannot be null.")); }
 
@@ -55,6 +56,7 @@ namespace Identity.Server.Controllers
         [Route("register/cook")]
         public async Task<IActionResult> RegisterCook([FromBody] RegisterUserDto userDto)
         {
+            if (userDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body.")); }
             if (userDto.Email == null) { return this.BadRequest(new ErrorResponse("Email cannot be null.")); }
             if (userDto.Password == null) { return this.BadRequest(new ErrorResponse("Password cannot be null.")); }
 
@@ -83,6 +85,7 @@ namespace Identity.Server.Controllers
         [Route("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
         {
+            if (refreshTokenDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body.")); }
             if (refreshTokenDto.AccessToken == null) { return this.BadRequest(new ErrorResponse("AccessToken cannot be null.")); }
             if (refreshTokenDto.RefreshToken == null) { return this.BadRequest(new ErrorResponse("RefreshToken cannot be null.")); }
 
@@ -114,6 +117,7 @@ namespace Identity.Server.Controllers
         [Route("login")]
         public async Task<IActionResult> LogIn([FromBody] LogInUserDto userDto)
         {
+            if (userDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body.")); }
             if (userDto.Email == null) { return this.BadRequest(new ErrorResponse("Email cannot be null.")); }
             if (userDto.Password == null) { return this.BadRequest(new ErrorResponse("Password cannot be null.")); }
 
