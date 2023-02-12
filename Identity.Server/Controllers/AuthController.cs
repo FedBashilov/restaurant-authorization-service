@@ -25,6 +25,9 @@ namespace Identity.Server.Controllers
 
         [HttpPost]
         [Route("register")]
+        [ProducesResponseType(200, Type = typeof(User))]
+        [ProducesResponseType(400, Type = typeof(ErrorResponse))]
+        [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto userDto)
         {
             if (userDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body.")); }
@@ -54,6 +57,9 @@ namespace Identity.Server.Controllers
         [Authorize(Roles = "admin")]
         [HttpPost]
         [Route("register/cook")]
+        [ProducesResponseType(200, Type = typeof(User))]
+        [ProducesResponseType(400, Type = typeof(ErrorResponse))]
+        [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> RegisterCook([FromBody] RegisterUserDto userDto)
         {
             if (userDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body.")); }
@@ -83,6 +89,10 @@ namespace Identity.Server.Controllers
 
         [HttpPost]
         [Route("refresh-token")]
+        [ProducesResponseType(200, Type = typeof(AuthResponse))]
+        [ProducesResponseType(400, Type = typeof(ErrorResponse))]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
         {
             if (refreshTokenDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body.")); }
@@ -115,6 +125,10 @@ namespace Identity.Server.Controllers
 
         [HttpPost]
         [Route("login")]
+        [ProducesResponseType(200, Type = typeof(AuthResponse))]
+        [ProducesResponseType(400, Type = typeof(ErrorResponse))]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> LogIn([FromBody] LogInUserDto userDto)
         {
             if (userDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body.")); }
