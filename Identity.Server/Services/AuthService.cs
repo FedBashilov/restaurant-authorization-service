@@ -54,9 +54,6 @@ namespace Identity.Server.Services
 
         public async Task<User> Register(RegisterUserDto userDto, string userRole)
         {
-            if (userDto.Email == null) { throw new ArgumentNullException("Email cannot be null."); }
-            if (userDto.Password == null) { throw new ArgumentNullException("Password cannot be null."); }
-
             var user = new User { Name = userDto.Name, Email = userDto.Email, UserName = userDto.Email };
 
             var result = await this.userManager.CreateAsync(user, userDto.Password);
@@ -77,7 +74,7 @@ namespace Identity.Server.Services
             }
             else
             {
-                throw new RegisterFailedException(string.Join(" ", result.Errors.ToList().Select(e => e.Description)) ?? string.Empty);
+                throw new RegisterFailedException(string.Join(";", result.Errors.ToList().Select(e => e.Description)) ?? string.Empty);
             }
         }
 

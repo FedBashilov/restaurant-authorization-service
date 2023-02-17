@@ -3,6 +3,7 @@
 namespace Identity.Server.Controllers
 {
     using System.Net.Mail;
+    using System.Text;
     using Identity.Server.Exceptions;
     using Identity.Server.Models;
     using Identity.Server.Services;
@@ -14,17 +15,17 @@ namespace Identity.Server.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authService;
-        private readonly IStringLocalizer<AuthController> stringLocalizer;
+        private readonly IStringLocalizer<AuthController> localizer;
 
         private readonly ILogger<AuthController> logger;
 
         public AuthController(
             IAuthService authService,
-            IStringLocalizer<AuthController> stringLocalizer,
+            IStringLocalizer<AuthController> localizer,
             ILogger<AuthController> logger)
         {
             this.authService = authService;
-            this.stringLocalizer = stringLocalizer;
+            this.localizer = localizer;
             this.logger = logger;
         }
 
@@ -35,11 +36,11 @@ namespace Identity.Server.Controllers
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto userDto)
         {
-            if (userDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body")); }
-            if (userDto.Email == null) { return this.BadRequest(new ErrorResponse("Email cannot be null")); }
-            if (!MailAddress.TryCreate(userDto.Email, out _)) { return this.BadRequest(new ErrorResponse("Invalid Email")); }
-            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse("Password cannot be null")); }
-            if (userDto.Password.Length < 8) { return this.BadRequest(new ErrorResponse("Password must be at least 8 characters")); }
+            if (userDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
+            if (userDto.Email == null) { return this.BadRequest(new ErrorResponse(this.localizer["Email is required"].Value)); }
+            if (!MailAddress.TryCreate(userDto.Email, out _)) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid Email"].Value)); }
+            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse(this.localizer["Password is required"].Value)); }
+            if (userDto.Password.Length < 8) { return this.BadRequest(new ErrorResponse(this.localizer["Password must be at least 8 characters"].Value)); }
 
             try
             {
@@ -48,16 +49,23 @@ namespace Identity.Server.Controllers
                 this.logger.LogInformation($"The user with id = {newUser.Id} registred successfully! Sending 201 response...");
                 return this.Ok(newUser);
             }
-            catch (Exception ex)
+            catch (RegisterFailedException ex)
             {
-                if (ex is RegisterFailedException || ex is ArgumentNullException)
+                this.logger.LogWarning(ex, $"Can't register user. {ex.Message} Sending 400 response...");
+
+                var messages = ex.Message.Split(";");
+                var messageBuilder = new StringBuilder();
+                foreach (var message in messages)
                 {
-                    this.logger.LogWarning(ex, $"Can't register user. {ex.Message} Sending 400 response...");
-                    return this.BadRequest(new ErrorResponse($"{ex.Message}"));
+                    messageBuilder.AppendLine(this.localizer[message].Value);
                 }
 
-                this.logger.LogWarning(ex, $"Can't register user. Unexpected error. Sending 500 response...");
-                return this.StatusCode(500, new ErrorResponse($"Unexpected error"));
+                return this.BadRequest(new ErrorResponse(messageBuilder.ToString()));
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogWarning(ex, $"Can't register user. Unexpected server error. Sending 500 response...");
+                return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
             }
         }
 
@@ -69,11 +77,11 @@ namespace Identity.Server.Controllers
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> RegisterCook([FromBody] RegisterUserDto userDto)
         {
-            if (userDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body")); }
-            if (userDto.Email == null) { return this.BadRequest(new ErrorResponse("Email cannot be null")); }
-            if (!MailAddress.TryCreate(userDto.Email, out _)) { return this.BadRequest(new ErrorResponse("Invalid Email")); }
-            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse("Password cannot be null")); }
-            if (userDto.Password.Length < 8) { return this.BadRequest(new ErrorResponse("Password must be at least 8 characters")); }
+            if (userDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
+            if (userDto.Email == null) { return this.BadRequest(new ErrorResponse(this.localizer["Email is required"].Value)); }
+            if (!MailAddress.TryCreate(userDto.Email, out _)) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid Email"].Value)); }
+            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse(this.localizer["Password is required"].Value)); }
+            if (userDto.Password.Length < 8) { return this.BadRequest(new ErrorResponse(this.localizer["Password must be at least 8 characters"].Value)); }
 
             try
             {
@@ -82,16 +90,23 @@ namespace Identity.Server.Controllers
                 this.logger.LogInformation($"The user with id = {newUser.Id} registred successfully! Sending 201 response...");
                 return this.Ok(newUser);
             }
-            catch (Exception ex)
+            catch (RegisterFailedException ex)
             {
-                if (ex is RegisterFailedException || ex is ArgumentNullException)
+                this.logger.LogWarning(ex, $"Can't register user. {ex.Message} Sending 400 response...");
+
+                var messages = ex.Message.Split(" ");
+                var messageBuilder = new StringBuilder();
+                foreach (var message in messages)
                 {
-                    this.logger.LogWarning(ex, $"Can't register user. {ex.Message} Sending 400 response...");
-                    return this.BadRequest(new ErrorResponse($"{ex.Message}"));
+                    messageBuilder.AppendLine(this.localizer[message].Value);
                 }
 
-                this.logger.LogWarning(ex, $"Can't register user. Unexpected error. Sending 500 response...");
-                return this.StatusCode(500, new ErrorResponse($"Unexpected error"));
+                return this.BadRequest(new ErrorResponse(messageBuilder.ToString()));
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogWarning(ex, $"Can't register user. Unexpected server error. Sending 500 response...");
+                return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
             }
         }
 
@@ -102,9 +117,9 @@ namespace Identity.Server.Controllers
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
         {
-            if (refreshTokenDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body")); }
-            if (refreshTokenDto.AccessToken == null) { return this.BadRequest(new ErrorResponse("AccessToken cannot be null")); }
-            if (refreshTokenDto.RefreshToken == null) { return this.BadRequest(new ErrorResponse("RefreshToken cannot be null")); }
+            if (refreshTokenDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
+            if (refreshTokenDto.AccessToken == null) { return this.BadRequest(new ErrorResponse(this.localizer["AccessToken is required"].Value)); }
+            if (refreshTokenDto.RefreshToken == null) { return this.BadRequest(new ErrorResponse(this.localizer["RefreshToken is required"].Value)); }
 
             try
             {
@@ -113,14 +128,14 @@ namespace Identity.Server.Controllers
             }
             catch (Exception ex)
             {
-                if (ex is InvalidRefreshTokenException || ex is ArgumentNullException || ex is UserNotFoundException)
+                if (ex is InvalidRefreshTokenException || ex is UserNotFoundException)
                 {
                     this.logger.LogWarning(ex, $"Can't refresh user tokens. {ex.Message} Sending 400 response...");
-                    return this.BadRequest(new ErrorResponse($"Invalid access or refresh tokens"));
+                    return this.BadRequest(new ErrorResponse(this.localizer["Invalid access or refresh tokens"].Value));
                 }
 
-                this.logger.LogWarning(ex, $"Can't refresh user tokens. Unexpected error. Sending 500 response...");
-                return this.StatusCode(500, new ErrorResponse($"Unexpected error"));
+                this.logger.LogWarning(ex, $"Can't refresh user tokens. Unexpected server error. Sending 500 response...");
+                return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
             }
         }
 
@@ -131,9 +146,9 @@ namespace Identity.Server.Controllers
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> LogIn([FromBody] LogInUserDto userDto)
         {
-            if (userDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body")); }
-            if (userDto.Email == null) { return this.BadRequest(new ErrorResponse("Email cannot be null")); }
-            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse("Password cannot be null")); }
+            if (userDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
+            if (userDto.Email == null) { return this.BadRequest(new ErrorResponse(this.localizer["Email is required"].Value)); }
+            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse(this.localizer["Password is required"].Value)); }
 
             try
             {
@@ -142,14 +157,14 @@ namespace Identity.Server.Controllers
             }
             catch (Exception ex)
             {
-                if (ex is WrongPasswordException || ex is ArgumentNullException || ex is UserNotFoundException)
+                if (ex is WrongPasswordException || ex is UserNotFoundException)
                 {
                     this.logger.LogWarning(ex, $"Can't log in user. {ex.Message} Sending 400 response...");
-                    return this.BadRequest(new ErrorResponse($"Wrong Email or Password"));
+                    return this.BadRequest(new ErrorResponse(this.localizer["Wrong Email or Password"].Value));
                 }
 
-                this.logger.LogWarning(ex, $"Can't log in user. Unexpected error. Sending 500 response...");
-                return this.StatusCode(500, new ErrorResponse($"Unexpected error"));
+                this.logger.LogWarning(ex, $"Can't log in user. Unexpected server error. Sending 500 response...");
+                return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
             }
         }
     }
