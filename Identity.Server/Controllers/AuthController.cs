@@ -37,9 +37,10 @@ namespace Identity.Server.Controllers
         {
             if (userDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body")); }
             if (userDto.Email == null) { return this.BadRequest(new ErrorResponse("Email cannot be null")); }
-            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse("Password cannot be null")); }
             if (!MailAddress.TryCreate(userDto.Email, out _)) { return this.BadRequest(new ErrorResponse("Invalid Email")); }
-            
+            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse("Password cannot be null")); }
+            if (userDto.Password.Length < 8) { return this.BadRequest(new ErrorResponse("Password must be at least 8 characters")); }
+
             try
             {
                 var newUser = await this.authService.Register(userDto, "client");
@@ -70,8 +71,9 @@ namespace Identity.Server.Controllers
         {
             if (userDto == null) { return this.BadRequest(new ErrorResponse("Invalid request body")); }
             if (userDto.Email == null) { return this.BadRequest(new ErrorResponse("Email cannot be null")); }
-            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse("Password cannot be null")); }
             if (!MailAddress.TryCreate(userDto.Email, out _)) { return this.BadRequest(new ErrorResponse("Invalid Email")); }
+            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse("Password cannot be null")); }
+            if (userDto.Password.Length < 8) { return this.BadRequest(new ErrorResponse("Password must be at least 8 characters")); }
 
             try
             {
