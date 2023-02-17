@@ -6,10 +6,8 @@ namespace Identity.Server.Models
 
     public class RefreshTokenDto
     {
-        [Required]
         public string? RefreshToken { get; set; }
 
-        [Required]
         public string? AccessToken { get; set; }
     }
 }
