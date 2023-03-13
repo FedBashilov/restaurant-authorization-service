@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Infrastructure.Database.Models
+namespace Infrastructure.Database
 {
     using Microsoft.AspNetCore.DataProtection;
     using Microsoft.AspNetCore.Identity;
@@ -16,7 +16,6 @@ namespace Infrastructure.Database.Models
             ILogger<DataProtectorTokenProvider<TUser>> logger)
             : base(dataProtectionProvider, options, logger)
         {
-            Options.TokenLifespan = TimeSpan.FromDays(30);
         }
     }
 }

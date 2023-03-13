@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Authorization.Service.Extentions
+namespace Infrastructure.Database.Extentions
 {
     using Infrastructure.Core.Models;
     using Infrastructure.Database.Models;
@@ -13,6 +13,7 @@ namespace Authorization.Service.Extentions
     {
         public static void AddDatabaseServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<DataProtectionTokenProviderOptions>(configuration.GetSection("RefreshTokenProviderOptions"));
             services.AddDbContext<AuthDatabaseContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"));

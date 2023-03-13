@@ -3,6 +3,7 @@
 namespace Identity.Server
 {
     using Authorization.Service.Extentions;
+    using Infrastructure.Database.Extentions;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OpenApi.Models;
 
