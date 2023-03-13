@@ -1,20 +1,10 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Web.Facade
+namespace Identity.Server
 {
-    using System.Security.Principal;
-    using System.Text;
-    using Identity.Server;
-    using Identity.Server.Extentions;
-    using Identity.Server.Models;
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
+    using Authorization.Service.Extentions;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Options;
-    using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
-    using Web.Facade.Models;
 
     public class Startup
     {
@@ -27,6 +17,7 @@ namespace Web.Facade
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDatabaseServices(this.Configuration);
             services.AddAuthServices(this.Configuration);
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");

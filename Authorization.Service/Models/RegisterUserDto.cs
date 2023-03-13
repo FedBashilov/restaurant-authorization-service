@@ -1,11 +1,7 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server.Models
+namespace Authorization.Service.Models
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using Microsoft.AspNetCore.Identity;
-
     public class RegisterUserDto
     {
         public string? Name { get; set; }

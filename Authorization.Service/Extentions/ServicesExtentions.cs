@@ -1,32 +1,23 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server.Extentions
+namespace Authorization.Service.Extentions
 {
     using System.Text;
-    using Identity.Server.Models;
-    using Identity.Server.Services;
+    using Authorization.Service;
+    using Infrastructure.Core.Models;
+    using Infrastructure.Database.Models;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.IdentityModel.Tokens;
-    using Web.Facade.Models;
 
     public static class ServicesExtentions
     {
         public static void AddAuthServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AuthDatabaseContext>(options =>
-            {
-                options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"));
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            });
-
-            services.AddIdentity<User, IdentityRole>()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<AuthDatabaseContext>()
-                .AddTokenProvider("CustomTokenProvider", typeof(CustomDataProtectorTokenProvider<User>));
-
             services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
             var secretKey = configuration.GetSection("JWTSettings:SecretKey").Value ?? throw new NullReferenceException("SecretKey can not be null");
             var issuer = configuration.GetSection("JWTSettings:Issuer").Value ?? throw new NullReferenceException("Issuer can not be null");

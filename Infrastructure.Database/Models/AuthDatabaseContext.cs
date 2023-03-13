@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Web.Facade.Models
+namespace Infrastructure.Database.Models
 {
-    using Identity.Server.Models;
+    using Infrastructure.Core.Models;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
     public class AuthDatabaseContext : IdentityDbContext<User>
     {
         public AuthDatabaseContext(DbContextOptions<AuthDatabaseContext> options)
-            : base(options) => this.Database.EnsureCreated();
+            : base(options) => Database.EnsureCreated();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

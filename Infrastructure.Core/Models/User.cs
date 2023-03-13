@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server.Models
+namespace Infrastructure.Core.Models
 {
     using Microsoft.AspNetCore.Identity;
 

@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server
+namespace Authorization.Service
 {
     public class JWTSettings
     {

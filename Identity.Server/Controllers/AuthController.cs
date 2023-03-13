@@ -4,9 +4,10 @@ namespace Identity.Server.Controllers
 {
     using System.Net.Mail;
     using System.Text;
-    using Identity.Server.Exceptions;
-    using Identity.Server.Models;
-    using Identity.Server.Services;
+    using Authorization.Service;
+    using Authorization.Service.Exceptions;
+    using Authorization.Service.Models;
+    using Infrastructure.Core.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;

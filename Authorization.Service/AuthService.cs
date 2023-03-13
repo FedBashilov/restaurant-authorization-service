@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server.Services
+namespace Authorization.Service
 {
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using System.Text;
-    using Identity.Server.Exceptions;
-    using Identity.Server.Models;
+    using Authorization.Service.Exceptions;
+    using Authorization.Service.Models;
+    using Infrastructure.Core.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
@@ -32,21 +33,21 @@ namespace Identity.Server.Services
             var jwtToken = new JwtSecurityToken(accessToken);
             var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor")?.Value;
 
-            var user = await this.userManager.FindByIdAsync(userId);
+            var user = await userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 throw new UserNotFoundException();
             }
 
-            var refreshTokenFromDb = await this.userManager.GetAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken");
-            var isValid = await this.userManager.VerifyUserTokenAsync(user, "CustomTokenProvider", "RefreshToken", refreshToken);
+            var refreshTokenFromDb = await userManager.GetAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken");
+            var isValid = await userManager.VerifyUserTokenAsync(user, "CustomTokenProvider", "RefreshToken", refreshToken);
 
             if (!isValid || refreshToken != refreshTokenFromDb)
             {
                 throw new InvalidRefreshTokenException("Invalid refresh token.");
             }
 
-            await this.userManager.RemoveAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken");
+            await userManager.RemoveAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken");
 
             var tokens = await this.GetTokens(user);
             return tokens;
@@ -56,20 +57,20 @@ namespace Identity.Server.Services
         {
             var user = new User { Name = userDto.Name, Email = userDto.Email, UserName = userDto.Email };
 
-            var result = await this.userManager.CreateAsync(user, userDto.Password);
+            var result = await userManager.CreateAsync(user, userDto.Password);
 
             if (result.Succeeded)
             {
-                await this.userManager.AddToRoleAsync(user, userRole);
+                await userManager.AddToRoleAsync(user, userRole);
 
-                await this.signInManager.SignInAsync(user, isPersistent: false);
+                await signInManager.SignInAsync(user, isPersistent: false);
 
                 var claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.Role, userRole));
                 claims.Add(new Claim(ClaimTypes.Actor, user.Id.ToString()));
                 claims.Add(new Claim(ClaimTypes.Email, user.Email));
 
-                await this.userManager.AddClaimsAsync(user, claims);
+                await userManager.AddClaimsAsync(user, claims);
                 return user;
             }
             else
@@ -80,21 +81,21 @@ namespace Identity.Server.Services
 
         public async Task<AuthResponse> LogIn(string email, string password)
         {
-            var user = await this.userManager.FindByEmailAsync(email);
+            var user = await userManager.FindByEmailAsync(email);
 
             if (user == null)
             {
                 throw new UserNotFoundException();
             }
 
-            var result = await this.signInManager.PasswordSignInAsync(user, password, false, false);
+            var result = await signInManager.PasswordSignInAsync(user, password, false, false);
 
             if (!result.Succeeded)
             {
                 throw new WrongPasswordException("Wrong password.");
             }
 
-            await this.userManager.RemoveAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken");
+            await userManager.RemoveAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken");
 
             var tokens = await this.GetTokens(user);
             return tokens;
@@ -102,12 +103,12 @@ namespace Identity.Server.Services
 
         private async Task<AuthResponse> GetTokens(User user)
         {
-            var newRefreshToken = await this.userManager.GenerateUserTokenAsync(user, "CustomTokenProvider", "RefreshToken");
-            await this.userManager.SetAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken", newRefreshToken);
+            var newRefreshToken = await userManager.GenerateUserTokenAsync(user, "CustomTokenProvider", "RefreshToken");
+            await userManager.SetAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken", newRefreshToken);
 
-            var claims = await this.userManager.GetClaimsAsync(user);
+            var claims = await userManager.GetClaimsAsync(user);
             var expiresIn = DateTime.UtcNow.AddDays(1);
-            var token = this.GetAccessToken(user, claims, expiresIn);
+            var token = GetAccessToken(user, claims, expiresIn);
 
             return new AuthResponse
             {
@@ -123,11 +124,11 @@ namespace Identity.Server.Services
             var claims = principal.ToList();
             claims.Add(new Claim(ClaimTypes.Name, user.UserName));
 
-            var singingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.options.SecretKey ?? string.Empty));
+            var singingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.SecretKey ?? string.Empty));
 
             var jwt = new JwtSecurityToken(
-                    issuer: this.options.Issuer,
-                    audience: this.options.Audience,
+                    issuer: options.Issuer,
+                    audience: options.Audience,
                     claims: claims,
                     expires: tokenExpires,
                     notBefore: DateTime.UtcNow,

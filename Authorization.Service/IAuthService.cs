@@ -1,8 +1,9 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server.Services
+namespace Authorization.Service
 {
-    using Identity.Server.Models;
+    using Authorization.Service.Models;
+    using Infrastructure.Core.Models;
 
     public interface IAuthService
     {

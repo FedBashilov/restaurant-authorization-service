@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server.Models
+namespace Authorization.Service.Models
 {
     public class ErrorResponse
     {
         public ErrorResponse(string message)
         {
-            this.Message = message;
+            Message = message;
         }
 
         public string? Message { get; set; }

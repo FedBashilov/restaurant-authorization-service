@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server.Models
+namespace Authorization.Service.Models
 {
     public class AuthResponse
     {

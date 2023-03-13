@@ -1,9 +1,10 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server.Models
+namespace Infrastructure.Database.Models
 {
     using Microsoft.AspNetCore.DataProtection;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
 
     public class CustomDataProtectorTokenProvider<TUser> : DataProtectorTokenProvider<TUser>
@@ -15,7 +16,7 @@ namespace Identity.Server.Models
             ILogger<DataProtectorTokenProvider<TUser>> logger)
             : base(dataProtectionProvider, options, logger)
         {
-            this.Options.TokenLifespan = TimeSpan.FromDays(30);
+            Options.TokenLifespan = TimeSpan.FromDays(30);
         }
     }
 }

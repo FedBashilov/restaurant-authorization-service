@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server.Models
+namespace Authorization.Service.Models
 {
-    using System.ComponentModel.DataAnnotations;
-
     public class LogInUserDto
     {
         public string? Email { get; set; }

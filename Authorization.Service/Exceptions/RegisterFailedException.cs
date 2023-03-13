@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server.Exceptions
+namespace Authorization.Service.Exceptions
 {
     public class RegisterFailedException : Exception
     {
