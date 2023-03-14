@@ -2,9 +2,7 @@
 
 namespace Infrastructure.Database.Extentions
 {
-    using Infrastructure.Core.Models;
     using Infrastructure.Database.Models;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
