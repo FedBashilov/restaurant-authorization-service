@@ -13,17 +13,11 @@ namespace Infrastructure.Database.Extentions
     {
         public static void AddDatabaseServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<DataProtectionTokenProviderOptions>(configuration.GetSection("RefreshTokenOptions"));
             services.AddDbContext<AuthDatabaseContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"));
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
-
-            services.AddIdentity<User, IdentityRole>()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<AuthDatabaseContext>()
-                .AddTokenProvider("CustomTokenProvider", typeof(CustomDataProtectorTokenProvider<User>));
         }
     }
 }

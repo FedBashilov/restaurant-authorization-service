@@ -4,7 +4,10 @@ namespace Authorization.Service.Extentions
 {
     using System.Text;
     using Authorization.Service;
+    using Infrastructure.Core.Models;
+    using Infrastructure.Database.Models;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -41,6 +44,14 @@ namespace Authorization.Service.Extentions
                     ClockSkew = TimeSpan.FromSeconds(10),
                 };
             });
+
+            services.Configure<DataProtectionTokenProviderOptions>(configuration.GetSection("RefreshTokenOptions"));
+
+            services.AddIdentity<User, IdentityRole>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<AuthDatabaseContext>()
+                .AddTokenProvider("UserTokenProvider", typeof(UserDataProtectorTokenProvider<User>));
+
             services.TryAddScoped<IAuthService, AuthService>();
         }
     }

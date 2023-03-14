@@ -39,15 +39,15 @@ namespace Authorization.Service
                 throw new UserNotFoundException();
             }
 
-            var refreshTokenFromDb = await userManager.GetAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken");
-            var isValid = await userManager.VerifyUserTokenAsync(user, "CustomTokenProvider", "RefreshToken", refreshToken);
+            var refreshTokenFromDb = await userManager.GetAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken");
+            var isValid = await userManager.VerifyUserTokenAsync(user, "UserTokenProvider", "RefreshToken", refreshToken);
 
             if (!isValid || refreshToken != refreshTokenFromDb)
             {
                 throw new InvalidRefreshTokenException("Invalid refresh token.");
             }
 
-            await userManager.RemoveAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken");
+            await userManager.RemoveAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken");
 
             var tokens = await this.GetTokens(user);
             return tokens;
@@ -97,7 +97,7 @@ namespace Authorization.Service
                 throw new WrongPasswordException("Wrong password.");
             }
 
-            await userManager.RemoveAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken");
+            await userManager.RemoveAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken");
 
             var tokens = await this.GetTokens(user);
             return tokens;
@@ -105,8 +105,8 @@ namespace Authorization.Service
 
         private async Task<AuthResponse> GetTokens(User user)
         {
-            var newRefreshToken = await userManager.GenerateUserTokenAsync(user, "CustomTokenProvider", "RefreshToken");
-            await userManager.SetAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken", newRefreshToken);
+            var newRefreshToken = await userManager.GenerateUserTokenAsync(user, "UserTokenProvider", "RefreshToken");
+            await userManager.SetAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken", newRefreshToken);
 
             var claims = await userManager.GetClaimsAsync(user);
             var expiresIn = DateTime.UtcNow.Add(this.options.TokenLifespan);

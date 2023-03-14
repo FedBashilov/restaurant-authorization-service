@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Infrastructure.Database
+namespace Authorization.Service
 {
     using Microsoft.AspNetCore.DataProtection;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
 
-    public class CustomDataProtectorTokenProvider<TUser> : DataProtectorTokenProvider<TUser>
+    public class UserDataProtectorTokenProvider<TUser> : DataProtectorTokenProvider<TUser>
         where TUser : class
     {
-        public CustomDataProtectorTokenProvider(
+        public UserDataProtectorTokenProvider(
             IDataProtectionProvider dataProtectionProvider,
             IOptions<DataProtectionTokenProviderOptions> options,
             ILogger<DataProtectorTokenProvider<TUser>> logger)
