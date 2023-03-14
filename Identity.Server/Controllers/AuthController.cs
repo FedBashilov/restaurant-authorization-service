@@ -8,6 +8,7 @@ namespace Identity.Server.Controllers
     using Authorization.Service.Exceptions;
     using Authorization.Service.Models.DTOs;
     using Authorization.Service.Models.Responses;
+    using Infrastructure.Core.Constants;
     using Infrastructure.Core.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -31,8 +32,7 @@ namespace Identity.Server.Controllers
             this.logger = logger;
         }
 
-        [HttpPost]
-        [Route("register")]
+        [HttpPost("register")]
         [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400, Type = typeof(ErrorResponse))]
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
@@ -46,7 +46,7 @@ namespace Identity.Server.Controllers
 
             try
             {
-                var newUser = await this.authService.Register(userDto, "client");
+                var newUser = await this.authService.Register(userDto, UserRoles.Client);
                 newUser.PasswordHash = null;
                 this.logger.LogInformation($"The user with id = {newUser.Id} registred successfully! Sending 201 response...");
                 return this.Ok(newUser);
@@ -71,9 +71,8 @@ namespace Identity.Server.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
-        [HttpPost]
-        [Route("register/cook")]
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpPost("register/cook")]
         [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400, Type = typeof(ErrorResponse))]
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
@@ -87,7 +86,7 @@ namespace Identity.Server.Controllers
 
             try
             {
-                var newUser = await this.authService.Register(userDto, "cook");
+                var newUser = await this.authService.Register(userDto, UserRoles.Cook);
                 newUser.PasswordHash = null;
                 this.logger.LogInformation($"The user with id = {newUser.Id} registred successfully! Sending 201 response...");
                 return this.Ok(newUser);
@@ -112,8 +111,7 @@ namespace Identity.Server.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("refresh-token")]
+        [HttpPost("refresh-token")]
         [ProducesResponseType(200, Type = typeof(AuthResponse))]
         [ProducesResponseType(400, Type = typeof(ErrorResponse))]
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
@@ -141,8 +139,7 @@ namespace Identity.Server.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("login")]
+        [HttpPost("login")]
         [ProducesResponseType(200, Type = typeof(AuthResponse))]
         [ProducesResponseType(400, Type = typeof(ErrorResponse))]
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
