@@ -25,7 +25,7 @@ namespace Identity.Server
 
             services.AddSwaggerGen(opt =>
             {
-                opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
+                opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Authorization API", Version = "v1" });
                 opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -46,7 +46,7 @@ namespace Identity.Server
                                 Id = "Bearer",
                             },
                         },
-                        new string[] { }
+                        Array.Empty<string>()
                     },
                 });
             });
