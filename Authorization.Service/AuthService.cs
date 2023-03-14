@@ -16,12 +16,12 @@ namespace Authorization.Service
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
-        private readonly JWTSettings options;
+        private readonly AccessTokenOptions options;
 
         public AuthService(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IOptions<JWTSettings> options)
+            IOptions<AccessTokenOptions> options)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -65,10 +65,12 @@ namespace Authorization.Service
 
                 await signInManager.SignInAsync(user, isPersistent: false);
 
-                var claims = new List<Claim>();
-                claims.Add(new Claim(ClaimTypes.Role, userRole));
-                claims.Add(new Claim(ClaimTypes.Actor, user.Id.ToString()));
-                claims.Add(new Claim(ClaimTypes.Email, user.Email));
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Role, userRole),
+                    new Claim(ClaimTypes.Actor, user.Id.ToString()),
+                    new Claim(ClaimTypes.Email, user.Email)
+                };
 
                 await userManager.AddClaimsAsync(user, claims);
                 return user;
@@ -107,7 +109,7 @@ namespace Authorization.Service
             await userManager.SetAuthenticationTokenAsync(user, "CustomTokenProvider", "RefreshToken", newRefreshToken);
 
             var claims = await userManager.GetClaimsAsync(user);
-            var expiresIn = DateTime.UtcNow.AddDays(1);
+            var expiresIn = DateTime.UtcNow.Add(this.options.TokenLifespan);
             var token = GetAccessToken(user, claims, expiresIn);
 
             return new AuthResponse
@@ -119,7 +121,7 @@ namespace Authorization.Service
             };
         }
 
-        private string GetAccessToken(User user, IEnumerable<Claim> principal, DateTime tokenExpires)
+        private string GetAccessToken(User user, IEnumerable<Claim> principal, DateTime expiresIn)
         {
             var claims = principal.ToList();
             claims.Add(new Claim(ClaimTypes.Name, user.UserName));
@@ -130,7 +132,7 @@ namespace Authorization.Service
                     issuer: options.Issuer,
                     audience: options.Audience,
                     claims: claims,
-                    expires: tokenExpires,
+                    expires: expiresIn,
                     notBefore: DateTime.UtcNow,
                     signingCredentials: new SigningCredentials(singingKey, SecurityAlgorithms.HmacSha256));
 

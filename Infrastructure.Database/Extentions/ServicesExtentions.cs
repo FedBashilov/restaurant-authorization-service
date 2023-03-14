@@ -13,7 +13,7 @@ namespace Infrastructure.Database.Extentions
     {
         public static void AddDatabaseServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<DataProtectionTokenProviderOptions>(configuration.GetSection("RefreshTokenProviderOptions"));
+            services.Configure<DataProtectionTokenProviderOptions>(configuration.GetSection("RefreshTokenOptions"));
             services.AddDbContext<AuthDatabaseContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"));
