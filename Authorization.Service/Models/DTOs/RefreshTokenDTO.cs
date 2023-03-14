@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Authorization.Service.Models
+namespace Authorization.Service.Models.DTOs
 {
-    public class RefreshTokenDto
+    public class RefreshTokenDTO
     {
         public string? RefreshToken { get; set; }
 

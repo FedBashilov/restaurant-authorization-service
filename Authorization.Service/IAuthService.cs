@@ -2,12 +2,13 @@
 
 namespace Authorization.Service
 {
-    using Authorization.Service.Models;
+    using Authorization.Service.Models.DTOs;
+    using Authorization.Service.Models.Responses;
     using Infrastructure.Core.Models;
 
     public interface IAuthService
     {
-        public Task<User> Register(RegisterUserDto userDto, string userRole);
+        public Task<User> Register(RegisterUserDTO userDto, string userRole);
 
         public Task<AuthResponse> LogIn(string email, string password);
 

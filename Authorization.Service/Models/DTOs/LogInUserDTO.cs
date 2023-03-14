@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Authorization.Service.Models
+namespace Authorization.Service.Models.DTOs
 {
-    public class LogInUserDto
+    public class LogInUserDTO
     {
         public string? Email { get; set; }
 

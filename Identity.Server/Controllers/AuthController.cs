@@ -6,7 +6,8 @@ namespace Identity.Server.Controllers
     using System.Text;
     using Authorization.Service;
     using Authorization.Service.Exceptions;
-    using Authorization.Service.Models;
+    using Authorization.Service.Models.DTOs;
+    using Authorization.Service.Models.Responses;
     using Infrastructure.Core.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -35,7 +36,7 @@ namespace Identity.Server.Controllers
         [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400, Type = typeof(ErrorResponse))]
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDto userDto)
+        public async Task<IActionResult> Register([FromBody] RegisterUserDTO userDto)
         {
             if (userDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
             if (userDto.Email == null) { return this.BadRequest(new ErrorResponse(this.localizer["Email is required"].Value)); }
@@ -76,7 +77,7 @@ namespace Identity.Server.Controllers
         [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400, Type = typeof(ErrorResponse))]
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
-        public async Task<IActionResult> RegisterCook([FromBody] RegisterUserDto userDto)
+        public async Task<IActionResult> RegisterCook([FromBody] RegisterUserDTO userDto)
         {
             if (userDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
             if (userDto.Email == null) { return this.BadRequest(new ErrorResponse(this.localizer["Email is required"].Value)); }
@@ -116,7 +117,7 @@ namespace Identity.Server.Controllers
         [ProducesResponseType(200, Type = typeof(AuthResponse))]
         [ProducesResponseType(400, Type = typeof(ErrorResponse))]
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDTO refreshTokenDto)
         {
             if (refreshTokenDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
             if (refreshTokenDto.AccessToken == null) { return this.BadRequest(new ErrorResponse(this.localizer["AccessToken is required"].Value)); }
@@ -145,7 +146,7 @@ namespace Identity.Server.Controllers
         [ProducesResponseType(200, Type = typeof(AuthResponse))]
         [ProducesResponseType(400, Type = typeof(ErrorResponse))]
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
-        public async Task<IActionResult> LogIn([FromBody] LogInUserDto userDto)
+        public async Task<IActionResult> LogIn([FromBody] LogInUserDTO userDto)
         {
             if (userDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
             if (userDto.Email == null) { return this.BadRequest(new ErrorResponse(this.localizer["Email is required"].Value)); }

@@ -6,7 +6,8 @@ namespace Authorization.Service
     using System.Security.Claims;
     using System.Text;
     using Authorization.Service.Exceptions;
-    using Authorization.Service.Models;
+    using Authorization.Service.Models.DTOs;
+    using Authorization.Service.Models.Responses;
     using Infrastructure.Core.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Options;
@@ -53,7 +54,7 @@ namespace Authorization.Service
             return tokens;
         }
 
-        public async Task<User> Register(RegisterUserDto userDto, string userRole)
+        public async Task<User> Register(RegisterUserDTO userDto, string userRole)
         {
             var user = new User { Name = userDto.Name, Email = userDto.Email, UserName = userDto.Email };
 
