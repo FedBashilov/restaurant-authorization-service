@@ -4,14 +4,14 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+    <NoWarn>$(NoWarn),1573,1591,1712</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Remove="stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
 
     
@@ -28,5 +28,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Authorization.Service\Authorization.Service.csproj" />
   </ItemGroup>
+
+    
+  <Import Project="..\Shared\Shared.projitems" Label="Shared" />
 
 </Project>

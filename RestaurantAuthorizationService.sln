@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Database", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Facade", "Web.Facade\Web.Facade.csproj", "{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{F3062310-9D1A-4838-8829-71052FDF3327}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,5 +41,12 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBE604D5-A971-40CC-97DE-8716F83283BA}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared\Shared.projitems*{4e69fe8c-d80e-4baa-b19b-7ac192b9cc75}*SharedItemsImports = 5
+		Shared\Shared.projitems*{5b03ac93-2714-4e98-ac0d-3ece28db4141}*SharedItemsImports = 5
+		Shared\Shared.projitems*{b148f1fe-1232-43df-b6d5-802a71341123}*SharedItemsImports = 5
+		Shared\Shared.projitems*{d9e516b3-3ce9-467b-a15c-81faf6f3e3e7}*SharedItemsImports = 5
+		Shared\Shared.projitems*{f3062310-9d1a-4838-8829-71052fdf3327}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
