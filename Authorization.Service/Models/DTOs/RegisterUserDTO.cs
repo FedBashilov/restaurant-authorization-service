@@ -17,25 +17,29 @@ namespace Authorization.Service.Models.DTOs
         {
             message = string.Empty;
 
-            if (userDto == null) 
+            if (userDto == null)
             {
-                message = "Invalid request body"; 
+                message = "Invalid request body";
             }
-            if (userDto!.Email == null) 
+
+            if (userDto!.Email == null)
             {
-                message = "Email is required"; 
+                message = "Email is required";
             }
-            if (!MailAddress.TryCreate(userDto.Email!, out _)) 
+
+            if (!MailAddress.TryCreate(userDto.Email!, out _))
             {
-                message = "Invalid Email"; 
+                message = "Invalid Email";
             }
-            if (userDto.Password == null) 
+
+            if (userDto.Password == null)
             {
-                message = "Password is required"; 
+                message = "Password is required";
             }
-            if (userDto.Password!.Length < 8) 
+
+            if (userDto.Password!.Length < 8)
             {
-                message = "Password must be at least 8 characters"; 
+                message = "Password must be at least 8 characters";
             }
 
             return message == string.Empty;

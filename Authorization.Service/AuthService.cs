@@ -34,21 +34,21 @@ namespace Authorization.Service
             var jwtToken = new JwtSecurityToken(accessToken);
             var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor")?.Value;
 
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 throw new UserNotFoundException();
             }
 
-            var refreshTokenFromDb = await userManager.GetAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken");
-            var isValid = await userManager.VerifyUserTokenAsync(user, "UserTokenProvider", "RefreshToken", refreshToken);
+            var refreshTokenFromDb = await this.userManager.GetAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken");
+            var isValid = await this.userManager.VerifyUserTokenAsync(user, "UserTokenProvider", "RefreshToken", refreshToken);
 
             if (!isValid || refreshToken != refreshTokenFromDb)
             {
                 throw new InvalidRefreshTokenException("Invalid refresh token.");
             }
 
-            await userManager.RemoveAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken");
+            await this.userManager.RemoveAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken");
 
             var tokens = await this.GetTokens(user);
             return tokens;
@@ -58,22 +58,22 @@ namespace Authorization.Service
         {
             var user = new User { Name = userDto.Name, Email = userDto.Email, UserName = userDto.Email };
 
-            var result = await userManager.CreateAsync(user, userDto.Password);
+            var result = await this.userManager.CreateAsync(user, userDto.Password);
 
             if (result.Succeeded)
             {
-                await userManager.AddToRoleAsync(user, userRole);
+                await this.userManager.AddToRoleAsync(user, userRole);
 
-                await signInManager.SignInAsync(user, isPersistent: false);
+                await this.signInManager.SignInAsync(user, isPersistent: false);
 
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Role, userRole),
                     new Claim(ClaimTypes.Actor, user.Id.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email!)
+                    new Claim(ClaimTypes.Email, user.Email!),
                 };
 
-                await userManager.AddClaimsAsync(user, claims);
+                await this.userManager.AddClaimsAsync(user, claims);
                 return user;
             }
             else
@@ -84,21 +84,21 @@ namespace Authorization.Service
 
         public async Task<AuthResponse> LogIn(string email, string password)
         {
-            var user = await userManager.FindByEmailAsync(email);
+            var user = await this.userManager.FindByEmailAsync(email);
 
             if (user == null)
             {
                 throw new UserNotFoundException();
             }
 
-            var result = await signInManager.PasswordSignInAsync(user, password, false, false);
+            var result = await this.signInManager.PasswordSignInAsync(user, password, false, false);
 
             if (!result.Succeeded)
             {
                 throw new WrongPasswordException("Wrong password.");
             }
 
-            await userManager.RemoveAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken");
+            await this.userManager.RemoveAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken");
 
             var tokens = await this.GetTokens(user);
             return tokens;
@@ -106,12 +106,12 @@ namespace Authorization.Service
 
         private async Task<AuthResponse> GetTokens(User user)
         {
-            var newRefreshToken = await userManager.GenerateUserTokenAsync(user, "UserTokenProvider", "RefreshToken");
-            await userManager.SetAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken", newRefreshToken);
+            var newRefreshToken = await this.userManager.GenerateUserTokenAsync(user, "UserTokenProvider", "RefreshToken");
+            await this.userManager.SetAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken", newRefreshToken);
 
-            var claims = await userManager.GetClaimsAsync(user);
+            var claims = await this.userManager.GetClaimsAsync(user);
             var expiresIn = DateTime.UtcNow.Add(this.options.TokenLifespan);
-            var token = GetAccessToken(user, claims, expiresIn);
+            var token = this.GetAccessToken(user, claims, expiresIn);
 
             return new AuthResponse
             {
@@ -127,11 +127,11 @@ namespace Authorization.Service
             var claims = principal.ToList();
             claims.Add(new Claim(ClaimTypes.Name, user.UserName));
 
-            var singingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.SecretKey ?? string.Empty));
+            var singingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.options.SecretKey ?? string.Empty));
 
             var jwt = new JwtSecurityToken(
-                    issuer: options.Issuer,
-                    audience: options.Audience,
+                    issuer: this.options.Issuer,
+                    audience: this.options.Audience,
                     claims: claims,
                     expires: expiresIn,
                     notBefore: DateTime.UtcNow,

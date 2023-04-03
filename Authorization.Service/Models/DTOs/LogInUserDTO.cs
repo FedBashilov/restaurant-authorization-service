@@ -18,10 +18,12 @@ namespace Authorization.Service.Models.DTOs
             {
                 message = "Invalid request body";
             }
+
             if (loginDto!.Email == null)
             {
                 message = "Email is required";
             }
+
             if (loginDto.Password == null)
             {
                 message = "Password is required";

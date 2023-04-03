@@ -18,10 +18,12 @@ namespace Authorization.Service.Models.DTOs
             {
                 message = "Invalid request body";
             }
+
             if (tokenDto!.AccessToken == null)
             {
                 message = "AccessToken is required";
             }
+
             if (tokenDto.RefreshToken == null)
             {
                 message = "RefreshToken is required";
