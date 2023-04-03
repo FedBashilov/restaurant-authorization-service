@@ -2,7 +2,6 @@
 
 namespace Web.Facade.Controllers
 {
-    using System.Net.Mail;
     using System.Text;
     using Authorization.Service;
     using Authorization.Service.Exceptions;
@@ -47,12 +46,12 @@ namespace Web.Facade.Controllers
             {
                 var newUser = await this.authService.Register(userDto, UserRoles.Client);
                 newUser.PasswordHash = null;
-                this.logger.LogInformation($"The user with id = {newUser.Id} registred successfully! Sending 201 response...");
+
                 return this.Ok(newUser);
             }
             catch (RegisterFailedException ex)
             {
-                this.logger.LogWarning(ex, $"Can't register user. {ex.Message} Sending 400 response...");
+                this.logger.LogWarning(ex, $"Can't register user. {ex.Message}");
 
                 var messages = ex.Message.Split(";");
                 var messageBuilder = new StringBuilder();
@@ -65,7 +64,7 @@ namespace Web.Facade.Controllers
             }
             catch (Exception ex)
             {
-                this.logger.LogWarning(ex, $"Can't register user. Unexpected server error. Sending 500 response...");
+                this.logger.LogError(ex, $"Can't register user. {ex.Message}");
                 return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
             }
         }
@@ -86,12 +85,12 @@ namespace Web.Facade.Controllers
             {
                 var newUser = await this.authService.Register(userDto, UserRoles.Cook);
                 newUser.PasswordHash = null;
-                this.logger.LogInformation($"The user with id = {newUser.Id} registred successfully! Sending 201 response...");
+
                 return this.Ok(newUser);
             }
             catch (RegisterFailedException ex)
             {
-                this.logger.LogWarning(ex, $"Can't register user. {ex.Message} Sending 400 response...");
+                this.logger.LogWarning(ex, $"Can't register user. {ex.Message}");
 
                 var messages = ex.Message.Split(" ");
                 var messageBuilder = new StringBuilder();
@@ -104,7 +103,7 @@ namespace Web.Facade.Controllers
             }
             catch (Exception ex)
             {
-                this.logger.LogWarning(ex, $"Can't register user. Unexpected server error. Sending 500 response...");
+                this.logger.LogError(ex, $"Can't register user. {ex.Message}");
                 return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
             }
         }
@@ -129,11 +128,11 @@ namespace Web.Facade.Controllers
             {
                 if (ex is InvalidRefreshTokenException || ex is UserNotFoundException)
                 {
-                    this.logger.LogWarning(ex, $"Can't refresh user tokens. {ex.Message} Sending 400 response...");
+                    this.logger.LogWarning(ex, $"Can't refresh user tokens. {ex.Message}");
                     return this.BadRequest(new ErrorResponse(this.localizer["Invalid access or refresh tokens"].Value));
                 }
 
-                this.logger.LogWarning(ex, $"Can't refresh user tokens. Unexpected server error. Sending 500 response...");
+                this.logger.LogError(ex, $"Can't refresh user tokens. {ex.Message}");
                 return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
             }
         }
@@ -158,11 +157,11 @@ namespace Web.Facade.Controllers
             {
                 if (ex is WrongPasswordException || ex is UserNotFoundException)
                 {
-                    this.logger.LogWarning(ex, $"Can't log in user. {ex.Message} Sending 400 response...");
+                    this.logger.LogWarning(ex, $"Can't log in user. {ex.Message}");
                     return this.BadRequest(new ErrorResponse(this.localizer["Wrong Email or Password"].Value));
                 }
 
-                this.logger.LogWarning(ex, $"Can't log in user. Unexpected server error. Sending 500 response...");
+                this.logger.LogError(ex, $"Can't log in user. {ex.Message}");
                 return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
             }
         }

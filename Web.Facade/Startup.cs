@@ -6,6 +6,7 @@ namespace Web.Facade
     using Infrastructure.Database.Extentions;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OpenApi.Models;
+    using Web.Facade.Middlewares;
 
     public class Startup
     {
@@ -62,6 +63,9 @@ namespace Web.Facade
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<HttpRequestBodyMiddleware>();
+            app.UseMiddleware<UnhandledExceptionMiddleware>();
 
             var supportedCultures = new[] { "en-US", "ru-RU" };
             var localizationOptions =
