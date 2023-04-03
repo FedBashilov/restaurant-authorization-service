@@ -70,7 +70,7 @@ namespace Authorization.Service
                 {
                     new Claim(ClaimTypes.Role, userRole),
                     new Claim(ClaimTypes.Actor, user.Id.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email)
+                    new Claim(ClaimTypes.Email, user.Email!)
                 };
 
                 await userManager.AddClaimsAsync(user, claims);
