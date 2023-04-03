@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server
+namespace Web.Facade
 {
     public class Program
     {

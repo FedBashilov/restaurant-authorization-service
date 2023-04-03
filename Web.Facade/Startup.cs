@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server
+namespace Web.Facade
 {
     using Authorization.Service.Extentions;
     using Infrastructure.Database.Extentions;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OpenApi.Models;
+    using Web.Facade.Middlewares;
 
     public class Startup
     {
@@ -62,6 +63,9 @@ namespace Identity.Server
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<HttpRequestBodyMiddleware>();
+            app.UseMiddleware<UnhandledExceptionMiddleware>();
 
             var supportedCultures = new[] { "en-US", "ru-RU" };
             var localizationOptions =

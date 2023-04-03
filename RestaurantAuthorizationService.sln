@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Server", "Identity.Server\Identity.Server.csproj", "{1608121A-D858-4A4C-9021-B7FBE4EEFE9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authorization.Service", "Authorization.Service\Authorization.Service.csproj", "{D9E516B3-3CE9-467B-A15C-81FAF6F3E3E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization.Service", "Authorization.Service\Authorization.Service.csproj", "{D9E516B3-3CE9-467B-A15C-81FAF6F3E3E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Core", "Infrastructure.Core\Infrastructure.Core.csproj", "{5B03AC93-2714-4E98-AC0D-3ECE28DB4141}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Core", "Infrastructure.Core\Infrastructure.Core.csproj", "{5B03AC93-2714-4E98-AC0D-3ECE28DB4141}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Database", "Infrastructure.Database\Infrastructure.Database.csproj", "{B148F1FE-1232-43DF-B6D5-802A71341123}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Database", "Infrastructure.Database\Infrastructure.Database.csproj", "{B148F1FE-1232-43DF-B6D5-802A71341123}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Facade", "Web.Facade\Web.Facade.csproj", "{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{F3062310-9D1A-4838-8829-71052FDF3327}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1608121A-D858-4A4C-9021-B7FBE4EEFE9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1608121A-D858-4A4C-9021-B7FBE4EEFE9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1608121A-D858-4A4C-9021-B7FBE4EEFE9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1608121A-D858-4A4C-9021-B7FBE4EEFE9A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9E516B3-3CE9-467B-A15C-81FAF6F3E3E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D9E516B3-3CE9-467B-A15C-81FAF6F3E3E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9E516B3-3CE9-467B-A15C-81FAF6F3E3E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,11 +31,22 @@ Global
 		{B148F1FE-1232-43DF-B6D5-802A71341123}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B148F1FE-1232-43DF-B6D5-802A71341123}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B148F1FE-1232-43DF-B6D5-802A71341123}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBE604D5-A971-40CC-97DE-8716F83283BA}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared\Shared.projitems*{4e69fe8c-d80e-4baa-b19b-7ac192b9cc75}*SharedItemsImports = 5
+		Shared\Shared.projitems*{5b03ac93-2714-4e98-ac0d-3ece28db4141}*SharedItemsImports = 5
+		Shared\Shared.projitems*{b148f1fe-1232-43df-b6d5-802a71341123}*SharedItemsImports = 5
+		Shared\Shared.projitems*{d9e516b3-3ce9-467b-a15c-81faf6f3e3e7}*SharedItemsImports = 5
+		Shared\Shared.projitems*{f3062310-9d1a-4838-8829-71052fdf3327}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

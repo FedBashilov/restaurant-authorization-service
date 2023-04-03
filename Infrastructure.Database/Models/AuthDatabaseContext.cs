@@ -10,11 +10,10 @@ namespace Infrastructure.Database.Models
     public class AuthDatabaseContext : IdentityDbContext<User>
     {
         public AuthDatabaseContext(DbContextOptions<AuthDatabaseContext> options)
-            : base(options) => Database.EnsureCreated();
+            : base(options) => this.Database.EnsureCreated();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>()

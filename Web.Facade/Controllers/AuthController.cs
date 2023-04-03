@@ -1,8 +1,7 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server.Controllers
+namespace Web.Facade.Controllers
 {
-    using System.Net.Mail;
     using System.Text;
     using Authorization.Service;
     using Authorization.Service.Exceptions;
@@ -38,22 +37,21 @@ namespace Identity.Server.Controllers
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> Register([FromBody] RegisterUserDTO userDto)
         {
-            if (userDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
-            if (userDto.Email == null) { return this.BadRequest(new ErrorResponse(this.localizer["Email is required"].Value)); }
-            if (!MailAddress.TryCreate(userDto.Email, out _)) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid Email"].Value)); }
-            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse(this.localizer["Password is required"].Value)); }
-            if (userDto.Password.Length < 8) { return this.BadRequest(new ErrorResponse(this.localizer["Password must be at least 8 characters"].Value)); }
+            if (!RegisterUserDTO.IsValidModel(userDto, out var errorMessage))
+            {
+                return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
+            }
 
             try
             {
                 var newUser = await this.authService.Register(userDto, UserRoles.Client);
                 newUser.PasswordHash = null;
-                this.logger.LogInformation($"The user with id = {newUser.Id} registred successfully! Sending 201 response...");
+
                 return this.Ok(newUser);
             }
             catch (RegisterFailedException ex)
             {
-                this.logger.LogWarning(ex, $"Can't register user. {ex.Message} Sending 400 response...");
+                this.logger.LogWarning(ex, $"Can't register user. {ex.Message}");
 
                 var messages = ex.Message.Split(";");
                 var messageBuilder = new StringBuilder();
@@ -66,7 +64,7 @@ namespace Identity.Server.Controllers
             }
             catch (Exception ex)
             {
-                this.logger.LogWarning(ex, $"Can't register user. Unexpected server error. Sending 500 response...");
+                this.logger.LogError(ex, $"Can't register user. {ex.Message}");
                 return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
             }
         }
@@ -78,22 +76,21 @@ namespace Identity.Server.Controllers
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> RegisterCook([FromBody] RegisterUserDTO userDto)
         {
-            if (userDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
-            if (userDto.Email == null) { return this.BadRequest(new ErrorResponse(this.localizer["Email is required"].Value)); }
-            if (!MailAddress.TryCreate(userDto.Email, out _)) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid Email"].Value)); }
-            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse(this.localizer["Password is required"].Value)); }
-            if (userDto.Password.Length < 8) { return this.BadRequest(new ErrorResponse(this.localizer["Password must be at least 8 characters"].Value)); }
+            if (!RegisterUserDTO.IsValidModel(userDto, out var errorMessage))
+            {
+                return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
+            }
 
             try
             {
                 var newUser = await this.authService.Register(userDto, UserRoles.Cook);
                 newUser.PasswordHash = null;
-                this.logger.LogInformation($"The user with id = {newUser.Id} registred successfully! Sending 201 response...");
+
                 return this.Ok(newUser);
             }
             catch (RegisterFailedException ex)
             {
-                this.logger.LogWarning(ex, $"Can't register user. {ex.Message} Sending 400 response...");
+                this.logger.LogWarning(ex, $"Can't register user. {ex.Message}");
 
                 var messages = ex.Message.Split(" ");
                 var messageBuilder = new StringBuilder();
@@ -106,7 +103,7 @@ namespace Identity.Server.Controllers
             }
             catch (Exception ex)
             {
-                this.logger.LogWarning(ex, $"Can't register user. Unexpected server error. Sending 500 response...");
+                this.logger.LogError(ex, $"Can't register user. {ex.Message}");
                 return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
             }
         }
@@ -117,24 +114,25 @@ namespace Identity.Server.Controllers
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDTO refreshTokenDto)
         {
-            if (refreshTokenDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
-            if (refreshTokenDto.AccessToken == null) { return this.BadRequest(new ErrorResponse(this.localizer["AccessToken is required"].Value)); }
-            if (refreshTokenDto.RefreshToken == null) { return this.BadRequest(new ErrorResponse(this.localizer["RefreshToken is required"].Value)); }
+            if (!RefreshTokenDTO.IsValidModel(refreshTokenDto, out var errorMessage))
+            {
+                return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
+            }
 
             try
             {
-                var tokens = await this.authService.RefreshTokens(refreshTokenDto.AccessToken, refreshTokenDto.RefreshToken);
+                var tokens = await this.authService.RefreshTokens(refreshTokenDto.AccessToken!, refreshTokenDto.RefreshToken!);
                 return this.Ok(tokens);
             }
             catch (Exception ex)
             {
                 if (ex is InvalidRefreshTokenException || ex is UserNotFoundException)
                 {
-                    this.logger.LogWarning(ex, $"Can't refresh user tokens. {ex.Message} Sending 400 response...");
+                    this.logger.LogWarning(ex, $"Can't refresh user tokens. {ex.Message}");
                     return this.BadRequest(new ErrorResponse(this.localizer["Invalid access or refresh tokens"].Value));
                 }
 
-                this.logger.LogWarning(ex, $"Can't refresh user tokens. Unexpected server error. Sending 500 response...");
+                this.logger.LogError(ex, $"Can't refresh user tokens. {ex.Message}");
                 return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
             }
         }
@@ -143,26 +141,27 @@ namespace Identity.Server.Controllers
         [ProducesResponseType(200, Type = typeof(AuthResponse))]
         [ProducesResponseType(400, Type = typeof(ErrorResponse))]
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
-        public async Task<IActionResult> LogIn([FromBody] LogInUserDTO userDto)
+        public async Task<IActionResult> LogIn([FromBody] LogInUserDTO loginDto)
         {
-            if (userDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
-            if (userDto.Email == null) { return this.BadRequest(new ErrorResponse(this.localizer["Email is required"].Value)); }
-            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse(this.localizer["Password is required"].Value)); }
+            if (!LogInUserDTO.IsValidModel(loginDto, out var errorMessage))
+            {
+                return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
+            }
 
             try
             {
-                var tokens = await this.authService.LogIn(userDto.Email, userDto.Password);
+                var tokens = await this.authService.LogIn(loginDto.Email!, loginDto.Password!);
                 return this.Ok(tokens);
             }
             catch (Exception ex)
             {
                 if (ex is WrongPasswordException || ex is UserNotFoundException)
                 {
-                    this.logger.LogWarning(ex, $"Can't log in user. {ex.Message} Sending 400 response...");
+                    this.logger.LogWarning(ex, $"Can't log in user. {ex.Message}");
                     return this.BadRequest(new ErrorResponse(this.localizer["Wrong Email or Password"].Value));
                 }
 
-                this.logger.LogWarning(ex, $"Can't log in user. Unexpected server error. Sending 500 response...");
+                this.logger.LogError(ex, $"Can't log in user. {ex.Message}");
                 return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
             }
         }
