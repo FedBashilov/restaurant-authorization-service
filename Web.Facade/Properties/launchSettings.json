@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "IdentityServer": {
+    "Web.Facade": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

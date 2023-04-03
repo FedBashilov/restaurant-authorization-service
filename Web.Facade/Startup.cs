@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server
+namespace Web.Facade
 {
     using Authorization.Service.Extentions;
     using Infrastructure.Database.Extentions;

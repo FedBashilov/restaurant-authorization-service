@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Identity.Server.Controllers
+namespace Web.Facade.Controllers
 {
     using System.Net.Mail;
     using System.Text;
