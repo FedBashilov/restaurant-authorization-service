@@ -38,11 +38,10 @@ namespace Web.Facade.Controllers
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> Register([FromBody] RegisterUserDTO userDto)
         {
-            if (userDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
-            if (userDto.Email == null) { return this.BadRequest(new ErrorResponse(this.localizer["Email is required"].Value)); }
-            if (!MailAddress.TryCreate(userDto.Email, out _)) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid Email"].Value)); }
-            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse(this.localizer["Password is required"].Value)); }
-            if (userDto.Password.Length < 8) { return this.BadRequest(new ErrorResponse(this.localizer["Password must be at least 8 characters"].Value)); }
+            if (!RegisterUserDTO.IsValidModel(userDto, out var errorMessage))
+            {
+                return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
+            }
 
             try
             {
@@ -78,11 +77,10 @@ namespace Web.Facade.Controllers
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> RegisterCook([FromBody] RegisterUserDTO userDto)
         {
-            if (userDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
-            if (userDto.Email == null) { return this.BadRequest(new ErrorResponse(this.localizer["Email is required"].Value)); }
-            if (!MailAddress.TryCreate(userDto.Email, out _)) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid Email"].Value)); }
-            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse(this.localizer["Password is required"].Value)); }
-            if (userDto.Password.Length < 8) { return this.BadRequest(new ErrorResponse(this.localizer["Password must be at least 8 characters"].Value)); }
+            if (!RegisterUserDTO.IsValidModel(userDto, out var errorMessage))
+            {
+                return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
+            }
 
             try
             {
@@ -117,13 +115,14 @@ namespace Web.Facade.Controllers
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDTO refreshTokenDto)
         {
-            if (refreshTokenDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
-            if (refreshTokenDto.AccessToken == null) { return this.BadRequest(new ErrorResponse(this.localizer["AccessToken is required"].Value)); }
-            if (refreshTokenDto.RefreshToken == null) { return this.BadRequest(new ErrorResponse(this.localizer["RefreshToken is required"].Value)); }
+            if (!RefreshTokenDTO.IsValidModel(refreshTokenDto, out var errorMessage))
+            {
+                return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
+            }
 
             try
             {
-                var tokens = await this.authService.RefreshTokens(refreshTokenDto.AccessToken, refreshTokenDto.RefreshToken);
+                var tokens = await this.authService.RefreshTokens(refreshTokenDto.AccessToken!, refreshTokenDto.RefreshToken!);
                 return this.Ok(tokens);
             }
             catch (Exception ex)
@@ -143,15 +142,16 @@ namespace Web.Facade.Controllers
         [ProducesResponseType(200, Type = typeof(AuthResponse))]
         [ProducesResponseType(400, Type = typeof(ErrorResponse))]
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
-        public async Task<IActionResult> LogIn([FromBody] LogInUserDTO userDto)
+        public async Task<IActionResult> LogIn([FromBody] LogInUserDTO loginDto)
         {
-            if (userDto == null) { return this.BadRequest(new ErrorResponse(this.localizer["Invalid request body"].Value)); }
-            if (userDto.Email == null) { return this.BadRequest(new ErrorResponse(this.localizer["Email is required"].Value)); }
-            if (userDto.Password == null) { return this.BadRequest(new ErrorResponse(this.localizer["Password is required"].Value)); }
+            if (!LogInUserDTO.IsValidModel(loginDto, out var errorMessage))
+            {
+                return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
+            }
 
             try
             {
-                var tokens = await this.authService.LogIn(userDto.Email, userDto.Password);
+                var tokens = await this.authService.LogIn(loginDto.Email!, loginDto.Password!);
                 return this.Ok(tokens);
             }
             catch (Exception ex)
