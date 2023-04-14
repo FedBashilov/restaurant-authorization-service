@@ -64,8 +64,6 @@ namespace Authorization.Service
             {
                 await this.userManager.AddToRoleAsync(user, userRole);
 
-                await this.signInManager.SignInAsync(user, isPersistent: false);
-
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Role, userRole),
@@ -91,7 +89,7 @@ namespace Authorization.Service
                 throw new UserNotFoundException();
             }
 
-            var result = await this.signInManager.PasswordSignInAsync(user, password, false, false);
+            var result = await this.signInManager.CheckPasswordSignInAsync(user, password, false);
 
             if (!result.Succeeded)
             {
