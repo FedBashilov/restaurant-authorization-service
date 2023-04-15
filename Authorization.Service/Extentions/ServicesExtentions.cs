@@ -17,6 +17,7 @@ namespace Authorization.Service.Extentions
     {
         public static void AddAuthServices(this IServiceCollection services, IConfiguration configuration)
         {
+
             services.AddTokenValidationServices(configuration);
             services.AddIdentityServices(configuration);
             services.TryAddScoped<IAuthService, AuthService>();
@@ -51,8 +52,8 @@ namespace Authorization.Service.Extentions
         private static void AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<DataProtectionTokenProviderOptions>(configuration.GetSection("RefreshTokenOptions"));
-/*            services.AddIdentity
-*/            services.AddIdentityCore<User>()
+
+            services.AddIdentityCore<User>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AuthDatabaseContext>()
                 .AddTokenProvider("UserTokenProvider", typeof(UserDataProtectorTokenProvider<User>));
