@@ -12,6 +12,7 @@ namespace Web.Facade.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
+    using Web.Facade.Models.Responses;
 
     [Route("api/v1/auth")]
     public class AuthController : ControllerBase
