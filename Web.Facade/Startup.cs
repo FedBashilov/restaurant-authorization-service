@@ -6,6 +6,7 @@ namespace Web.Facade
     using Infrastructure.Database.Extentions;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OpenApi.Models;
+    using Users.Service.Extentions;
     using Web.Facade.Middlewares;
 
     public class Startup
@@ -21,6 +22,7 @@ namespace Web.Facade
         {
             services.AddDatabaseServices(this.Configuration);
             services.AddAuthServices(this.Configuration);
+            services.AddUserServices(this.Configuration);
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 

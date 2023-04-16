@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Facade", "Web.Facade\We
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{F3062310-9D1A-4838-8829-71052FDF3327}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.Service", "Users.Service\Users.Service.csproj", "{3E386525-9BEE-427A-B599-24D13370890A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E386525-9BEE-427A-B599-24D13370890A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E386525-9BEE-427A-B599-24D13370890A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E386525-9BEE-427A-B599-24D13370890A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E386525-9BEE-427A-B599-24D13370890A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,6 +49,7 @@ Global
 		SolutionGuid = {BBE604D5-A971-40CC-97DE-8716F83283BA}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared\Shared.projitems*{3e386525-9bee-427a-b599-24d13370890a}*SharedItemsImports = 5
 		Shared\Shared.projitems*{4e69fe8c-d80e-4baa-b19b-7ac192b9cc75}*SharedItemsImports = 5
 		Shared\Shared.projitems*{5b03ac93-2714-4e98-ac0d-3ece28db4141}*SharedItemsImports = 5
 		Shared\Shared.projitems*{b148f1fe-1232-43df-b6d5-802a71341123}*SharedItemsImports = 5

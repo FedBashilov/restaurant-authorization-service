@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Authorization.Service.Models.Responses
+namespace Web.Facade.Models.Responses
 {
     public class ErrorResponse
     {

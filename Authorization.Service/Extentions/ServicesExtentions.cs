@@ -17,7 +17,6 @@ namespace Authorization.Service.Extentions
     {
         public static void AddAuthServices(this IServiceCollection services, IConfiguration configuration)
         {
-
             services.AddTokenValidationServices(configuration);
             services.AddIdentityServices(configuration);
             services.TryAddScoped<IAuthService, AuthService>();
