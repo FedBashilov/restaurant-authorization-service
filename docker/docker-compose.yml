@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+    web.facade:
+        image: auth_webfacade
+        ports:
+        - "5236:80"
+        build: ../
+        environment:
+            ConnectionStrings__DatabaseConnection: 
+                Data Source=172.23.224.1,1433; 
+                Initial Catalog=AuthorizationService; 
+                User ID=SA; Password=!Adminadmin1; 
+                Persist Security Info=True
+    db:
+        image: "mcr.microsoft.com/mssql/server:2019-latest"
+        container_name: auth_db
+        ports: # not actually needed, because the two services are on the same network
+            - "1433:1433" 
+        environment:
+            - ACCEPT_EULA=y
+            - MSSQL_SA_PASSWORD=!Adminadmin1
