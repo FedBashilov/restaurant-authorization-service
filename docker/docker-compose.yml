@@ -8,7 +8,7 @@ services:
         build: ../
         environment:
             ConnectionStrings__DatabaseConnection: 
-                Data Source=172.23.224.1,1433; 
+                Data Source=000.00.000.0,1433; 
                 Initial Catalog=AuthorizationService; 
                 User ID=SA; Password=!Adminadmin1; 
                 Persist Security Info=True
