@@ -2,6 +2,7 @@ version: '1.0'
 
 services:
     web.facade:
+        container_name: auth_webfacade
         image: auth_webfacade
         ports:
             - "5236:80"
@@ -22,6 +23,5 @@ services:
         networks:
             - app_bridge_network
 networks:
-    appBridgeNetwork:
+    app_bridge_network:
         driver: bridge
-        name: app_bridge_network
