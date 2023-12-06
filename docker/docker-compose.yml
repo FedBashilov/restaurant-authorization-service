@@ -1,22 +1,27 @@
-version: '3.4'
+version: '1.0'
 
 services:
     web.facade:
         image: auth_webfacade
         ports:
-        - "5236:80"
-        build: ../
+            - "5236:80"
+        build: '../'
         environment:
-            ConnectionStrings__DatabaseConnection: 
-                Data Source=000.00.000.0,1433; 
-                Initial Catalog=AuthorizationService; 
-                User ID=SA; Password=!Adminadmin1; 
-                Persist Security Info=True
+            ConnectionStrings__DatabaseConnection: 'Data Source=auth_db; Initial Catalog=AuthorizationService; User ID=SA; Password=Adminadmin1@'
+        depends_on:
+            - db
+        networks:
+            - app_bridge_network
     db:
         image: "mcr.microsoft.com/mssql/server:2019-latest"
         container_name: auth_db
-        ports: # not actually needed, because the two services are on the same network
-            - "1433:1433" 
         environment:
             - ACCEPT_EULA=y
-            - MSSQL_SA_PASSWORD=!Adminadmin1
+            - MSSQL_SA_PASSWORD=Adminadmin1@
+
+        networks:
+            - app_bridge_network
+networks:
+    appBridgeNetwork:
+        driver: bridge
+        name: app_bridge_network
