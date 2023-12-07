@@ -1,4 +1,5 @@
-version: '1.0'
+version: '3.5'
+name: authorization_service
 
 services:
     web.facade:
@@ -16,12 +17,17 @@ services:
     db:
         image: "mcr.microsoft.com/mssql/server:2019-latest"
         container_name: auth_db
+        ports:
+            - "1433:1433"
         environment:
             - ACCEPT_EULA=y
             - MSSQL_SA_PASSWORD=Adminadmin1@
 
         networks:
             - app_bridge_network
+
 networks:
     app_bridge_network:
+        name: app_bridge_network
         driver: bridge
+        external: true
