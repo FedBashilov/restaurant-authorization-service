@@ -123,6 +123,9 @@
   <data name="Email is required" xml:space="preserve">
     <value>Email обязателен</value>
   </data>
+  <data name="Email not confirmed" xml:space="preserve">
+    <value>Подтвердите почту</value>
+  </data>
   <data name="Invalid access or refresh tokens" xml:space="preserve">
     <value>Некорректный access или refresh токен</value>
   </data>

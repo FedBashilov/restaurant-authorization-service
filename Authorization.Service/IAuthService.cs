@@ -13,5 +13,7 @@ namespace Authorization.Service
         public Task<AuthResponse> LogIn(string email, string password);
 
         public Task<AuthResponse> RefreshTokens(string accessToken, string refreshToken);
+
+        public Task VerifyMail(string userId, string token);
     }
 }

@@ -4,6 +4,7 @@ namespace Authorization.Service.Extentions
 {
     using System.Text;
     using Authorization.Service;
+    using Authorization.Service.Models;
     using Infrastructure.Core.Models;
     using Infrastructure.Database.Models;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,6 +20,8 @@ namespace Authorization.Service.Extentions
         {
             services.AddTokenValidationServices(configuration);
             services.AddIdentityServices(configuration);
+            services.AddMailServices(configuration);
+
             services.TryAddScoped<IAuthService, AuthService>();
         }
 
@@ -55,6 +58,7 @@ namespace Authorization.Service.Extentions
             services.AddIdentityCore<User>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AuthDatabaseContext>()
+                .AddDefaultTokenProviders()
                 .AddTokenProvider("UserTokenProvider", typeof(UserDataProtectorTokenProvider<User>));
 
             services.AddHttpContextAccessor();
@@ -71,6 +75,12 @@ namespace Authorization.Service.Extentions
             services.TryAddScoped<UserManager<User>>();
             services.TryAddScoped<SignInManager<User>>();
             services.TryAddScoped<RoleManager<IdentityRole>>();
+        }
+
+        private static void AddMailServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+            services.AddTransient<IMailService, MailService>();
         }
     }
 }

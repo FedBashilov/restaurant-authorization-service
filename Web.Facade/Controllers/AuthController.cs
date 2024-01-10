@@ -156,13 +156,34 @@ namespace Web.Facade.Controllers
             }
             catch (Exception ex)
             {
-                if (ex is WrongPasswordException || ex is UserNotFoundException)
-                {
-                    this.logger.LogWarning(ex, $"Can't log in user. {ex.Message}");
-                    return this.BadRequest(new ErrorResponse(this.localizer["Wrong Email or Password"].Value));
-                }
+                this.logger.LogWarning(ex, $"Can't log in user. {ex.Message}");
 
-                this.logger.LogError(ex, $"Can't log in user. {ex.Message}");
+                return ex switch
+                {
+                    UserNotFoundException or WrongPasswordException =>
+                        this.BadRequest(new ErrorResponse(this.localizer["Wrong Email or Password"].Value)),
+                    EmailNotConfirmedException =>
+                        this.BadRequest(new ErrorResponse(this.localizer["Email not confirmed"].Value)),
+                    _ =>
+                        this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value)),
+                };
+            }
+        }
+
+        [HttpGet("verify")]
+        public async Task<IActionResult> Verify(
+            [FromQuery] string userId,
+            [FromQuery] string emailToken)
+        {
+            try
+            {
+                await this.authService.VerifyMail(userId, emailToken);
+
+                return this.Ok("You have successfully verified your account email! \nNow go back to our app and choose some delicious food ;)");
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, $"Can't verify user. {ex.Message}");
                 return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
             }
         }

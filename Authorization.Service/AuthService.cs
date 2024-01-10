@@ -5,7 +5,9 @@ namespace Authorization.Service
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using System.Text;
+    using System.Web;
     using Authorization.Service.Exceptions;
+    using Authorization.Service.Models;
     using Authorization.Service.Models.DTOs;
     using Authorization.Service.Models.Responses;
     using Infrastructure.Core.Models;
@@ -15,15 +17,18 @@ namespace Authorization.Service
 
     public class AuthService : IAuthService
     {
+        private readonly IMailService mailService;
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly AccessTokenOptions options;
 
         public AuthService(
+            IMailService mailService,
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             IOptions<AccessTokenOptions> options)
         {
+            this.mailService = mailService;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.options = options.Value;
@@ -60,24 +65,42 @@ namespace Authorization.Service
 
             var result = await this.userManager.CreateAsync(user, userDto.Password);
 
-            if (result.Succeeded)
-            {
-                await this.userManager.AddToRoleAsync(user, userRole);
-
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Role, userRole),
-                    new Claim(ClaimTypes.Actor, user.Id.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email!),
-                };
-
-                await this.userManager.AddClaimsAsync(user, claims);
-                return user;
-            }
-            else
+            if (!result.Succeeded)
             {
                 throw new RegisterFailedException(string.Join(";", result.Errors.ToList().Select(e => e.Description)) ?? string.Empty);
             }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Role, userRole),
+                new Claim(ClaimTypes.Actor, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email!),
+            };
+
+            var emailToken = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
+            var emailTokenHtmlVersion = HttpUtility.UrlEncode(emailToken);
+
+            var url = $"http://192.168.0.106:5236/api/v1/auth/verify?userId={user.Id}&emailToken={emailTokenHtmlVersion}";
+
+            await this.userManager.AddToRoleAsync(user, userRole);
+
+            var tasks = new Task[]
+            {
+                this.userManager.AddClaimsAsync(user, claims),
+                this.mailService.SendMail(new MailData()
+                {
+                    EmailSubject = "Email Verification",
+                    EmailBody = "Hi, " + user.Name + "!\n" +
+                        "You have been sent this email because you created an account on our website. \n" +
+                        "Please click on <a href =\"" + url + "\">this link</a> to confirm your email address is correct. ",
+                    EmailToId = user.Email,
+                    EmailToName = user.Name,
+                }),
+            };
+
+            await Task.WhenAll(tasks);
+
+            return user;
         }
 
         public async Task<AuthResponse> LogIn(string email, string password)
@@ -89,17 +112,41 @@ namespace Authorization.Service
                 throw new UserNotFoundException();
             }
 
-            var result = await this.signInManager.CheckPasswordSignInAsync(user, password, false);
+            var passwordCheckResult = await this.signInManager.CheckPasswordSignInAsync(user, password, false);
 
-            if (!result.Succeeded)
+            if (!passwordCheckResult.Succeeded)
             {
                 throw new WrongPasswordException("Wrong password.");
+            }
+
+            var isEmailConfirmed = await this.userManager.IsEmailConfirmedAsync(user);
+
+            if (!isEmailConfirmed)
+            {
+                throw new EmailNotConfirmedException("Email not confirmed.");
             }
 
             await this.userManager.RemoveAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken");
 
             var tokens = await this.GetTokens(user);
+
             return tokens;
+        }
+
+        public async Task VerifyMail(string userId, string emailToken)
+        {
+            var user = await this.userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            var result = await this.userManager.ConfirmEmailAsync(user, emailToken);
+
+            if (!result.Succeeded)
+            {
+                throw new InvalidEmailTokenException("Invalid email token.");
+            }
         }
 
         private async Task<AuthResponse> GetTokens(User user)
