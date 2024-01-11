@@ -21,17 +21,20 @@ namespace Authorization.Service
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly AccessTokenOptions options;
+        private readonly MailSettings mailSettings;
 
         public AuthService(
             IMailService mailService,
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IOptions<AccessTokenOptions> options)
+            IOptions<AccessTokenOptions> options,
+            IOptions<MailSettings> mailSettings)
         {
             this.mailService = mailService;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.options = options.Value;
+            this.mailSettings = mailSettings.Value;
         }
 
         public async Task<AuthResponse> RefreshTokens(string accessToken, string refreshToken)
@@ -80,7 +83,7 @@ namespace Authorization.Service
             var emailToken = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
             var emailTokenHtmlVersion = HttpUtility.UrlEncode(emailToken);
 
-            var url = $"http://192.168.0.106:5236/api/v1/auth/verify?userId={user.Id}&emailToken={emailTokenHtmlVersion}";
+            var url = $"{this.mailSettings.RedirectUrl}?userId={user.Id}&emailToken={emailTokenHtmlVersion}";
 
             await this.userManager.AddToRoleAsync(user, userRole);
 
