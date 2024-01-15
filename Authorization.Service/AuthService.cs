@@ -70,7 +70,11 @@ namespace Authorization.Service
 
             if (!result.Succeeded)
             {
-                throw new RegisterFailedException(string.Join(";", result.Errors.ToList().Select(e => e.Description)) ?? string.Empty);
+                var message =
+                    result.Errors.Any(e => e.Code == "DuplicateUserName")
+                        ? "Email is already taken"
+                        : string.Join(";", result.Errors.ToList().Select(e => e.Description));
+                throw new RegisterFailedException(message ?? string.Empty);
             }
 
             var claims = new List<Claim>

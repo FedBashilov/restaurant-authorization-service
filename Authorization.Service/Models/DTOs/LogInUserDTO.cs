@@ -4,11 +4,11 @@ namespace Authorization.Service.Models.DTOs
 {
     using System.Diagnostics.CodeAnalysis;
 
-    public class LogInUserDTO
+    public record LogInUserDTO
     {
-        public string? Email { get; set; }
+        public string? Email { get; init; }
 
-        public string? Password { get; set; }
+        public string? Password { get; init; }
 
         public static bool IsValidModel(LogInUserDTO loginDto, [NotNullWhen(false)] out string message)
         {
@@ -18,13 +18,11 @@ namespace Authorization.Service.Models.DTOs
             {
                 message = "Invalid request body";
             }
-
-            if (loginDto!.Email == null)
+            else if (loginDto.Email == null)
             {
                 message = "Email is required";
             }
-
-            if (loginDto.Password == null)
+            else if (loginDto.Password == null)
             {
                 message = "Password is required";
             }

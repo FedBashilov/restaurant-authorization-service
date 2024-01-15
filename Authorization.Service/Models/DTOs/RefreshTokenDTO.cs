@@ -4,11 +4,11 @@ namespace Authorization.Service.Models.DTOs
 {
     using System.Diagnostics.CodeAnalysis;
 
-    public class RefreshTokenDTO
+    public record RefreshTokenDTO
     {
-        public string? RefreshToken { get; set; }
+        public string? RefreshToken { get; init; }
 
-        public string? AccessToken { get; set; }
+        public string? AccessToken { get; init; }
 
         public static bool IsValidModel(RefreshTokenDTO tokenDto, [NotNullWhen(false)] out string message)
         {
@@ -18,13 +18,11 @@ namespace Authorization.Service.Models.DTOs
             {
                 message = "Invalid request body";
             }
-
-            if (tokenDto!.AccessToken == null)
+            else if (tokenDto.AccessToken == null)
             {
                 message = "AccessToken is required";
             }
-
-            if (tokenDto.RefreshToken == null)
+            else if (tokenDto.RefreshToken == null)
             {
                 message = "RefreshToken is required";
             }

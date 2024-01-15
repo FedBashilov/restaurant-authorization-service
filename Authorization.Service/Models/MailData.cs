@@ -2,14 +2,14 @@
 
 namespace Authorization.Service.Models
 {
-    public class MailData
+    public record MailData
     {
-        public string? EmailToId { get; set; }
+        public string? EmailToId { get; init; }
 
-        public string? EmailToName { get; set; }
+        public string? EmailToName { get; init; }
 
-        public string? EmailSubject { get; set; }
+        public string? EmailSubject { get; init; }
 
-        public string? EmailBody { get; set; }
+        public string? EmailBody { get; init; }
     }
 }

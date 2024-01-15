@@ -5,13 +5,13 @@ namespace Authorization.Service.Models.DTOs
     using System.Diagnostics.CodeAnalysis;
     using System.Net.Mail;
 
-    public class RegisterUserDTO
+    public record RegisterUserDTO
     {
-        public string? Name { get; set; }
+        public string? Name { get; init; }
 
-        public string? Email { get; set; }
+        public string? Email { get; init; }
 
-        public string? Password { get; set; }
+        public string? Password { get; init; }
 
         public static bool IsValidModel(RegisterUserDTO userDto, [NotNullWhen(false)] out string message)
         {
@@ -21,23 +21,19 @@ namespace Authorization.Service.Models.DTOs
             {
                 message = "Invalid request body";
             }
-
-            if (userDto!.Email == null)
+            else if (userDto.Email == null)
             {
                 message = "Email is required";
             }
-
-            if (!MailAddress.TryCreate(userDto.Email!, out _))
+            else if (!MailAddress.TryCreate(userDto.Email, out _))
             {
                 message = "Invalid Email";
             }
-
-            if (userDto.Password == null)
+            else if (userDto.Password == null)
             {
                 message = "Password is required";
             }
-
-            if (userDto.Password!.Length < 8)
+            else if (userDto.Password.Length < 8)
             {
                 message = "Password must be at least 8 characters";
             }

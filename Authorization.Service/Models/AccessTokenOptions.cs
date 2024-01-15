@@ -2,14 +2,14 @@
 
 namespace Authorization.Service.Models
 {
-    public class AccessTokenOptions
+    public record AccessTokenOptions
     {
-        public string? SecretKey { get; set; }
+        public string? SecretKey { get; init; }
 
-        public string? Issuer { get; set; }
+        public string? Issuer { get; init; }
 
-        public string? Audience { get; set; }
+        public string? Audience { get; init; }
 
-        public TimeSpan TokenLifespan { get; set; }
+        public TimeSpan TokenLifespan { get; init; }
     }
 }

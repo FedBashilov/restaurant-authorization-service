@@ -109,6 +109,45 @@ namespace Web.Facade.Controllers
             }
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpPost("register/admin")]
+        [ProducesResponseType(200, Type = typeof(User))]
+        [ProducesResponseType(400, Type = typeof(ErrorResponse))]
+        [ProducesResponseType(500, Type = typeof(ErrorResponse))]
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterUserDTO userDto)
+        {
+            if (!RegisterUserDTO.IsValidModel(userDto, out var errorMessage))
+            {
+                return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
+            }
+
+            try
+            {
+                var newUser = await this.authService.Register(userDto, UserRoles.Admin);
+                newUser.PasswordHash = null;
+
+                return this.Ok(newUser);
+            }
+            catch (RegisterFailedException ex)
+            {
+                this.logger.LogWarning(ex, $"Can't register user. {ex.Message}");
+
+                var messages = ex.Message.Split(" ");
+                var messageBuilder = new StringBuilder();
+                foreach (var message in messages)
+                {
+                    messageBuilder.AppendLine(this.localizer[message].Value);
+                }
+
+                return this.BadRequest(new ErrorResponse(messageBuilder.ToString()));
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, $"Can't register user. {ex.Message}");
+                return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
+            }
+        }
+
         [HttpPost("refresh-token")]
         [ProducesResponseType(200, Type = typeof(AuthResponse))]
         [ProducesResponseType(400, Type = typeof(ErrorResponse))]

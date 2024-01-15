@@ -2,20 +2,20 @@
 
 namespace Authorization.Service.Models
 {
-    public class MailSettings
+    public record MailSettings
     {
-        public string? Server { get; set; }
+        public string? Server { get; init; }
 
-        public int Port { get; set; }
+        public int Port { get; init; }
 
-        public string? SenderName { get; set; }
+        public string? SenderName { get; init; }
 
-        public string? SenderEmail { get; set; }
+        public string? SenderEmail { get; init; }
 
-        public string? UserName { get; set; }
+        public string? UserName { get; init; }
 
-        public string? Password { get; set; }
+        public string? Password { get; init; }
 
-        public string? RedirectUrl { get; set; }
+        public string? RedirectUrl { get; init; }
     }
 }
