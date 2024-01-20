@@ -4,6 +4,7 @@ using Infrastructure.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Identity.Server.Migrations
 {
     [DbContext(typeof(AuthDatabaseContext))]
-    partial class AuthDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240118131431_UpdateSeedData5Migration")]
+    partial class UpdateSeedData5Migration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

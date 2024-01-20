@@ -4,6 +4,7 @@ using Infrastructure.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Identity.Server.Migrations
 {
     [DbContext(typeof(AuthDatabaseContext))]
-    partial class AuthDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240118012307_UpdateSeedDataMigration")]
+    partial class UpdateSeedDataMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,37 +95,20 @@ namespace Identity.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "32131582-161e-4a1a-a696-5df7af15bda0",
+                            Id = "554b8926-041e-47ec-bece-ba4b1698cbc0",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d697c428-0ab1-49cd-bb33-8cc410a486af",
+                            ConcurrencyStamp = "49337883-3fd3-4bad-a793-0cb13b6c2c8c",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "admin",
                             NormalizedEmail = "admin@example.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAECHZODtNq9zUpmO3YJeKSkiJwMkh19mZ913Zk6j8K3a2jlfbrb4Pb09FGQYIDpNyUw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAJ8Qlf0sfME+pmzGAi8fyAIaB4zXWUGWPPXgQuSgD0KsTvquJV/PS+Oj+Ds2gfz/w==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
                             UserName = "admin"
-                        },
-                        new
-                        {
-                            Id = "d33c3f10-ba31-4086-ab7b-048f2888e7a3",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "3579e543-9914-4b56-afd5-c991d20c6a99",
-                            Email = "client@example.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            Name = "client",
-                            NormalizedEmail = "client@example.com",
-                            NormalizedUserName = "client",
-                            PasswordHash = "AQAAAAEAACcQAAAAENqj6Y8ivJJMk1RcKeXiGnYIGh1CWXNwqonHP/p2vJfd6ILxR1Z1oSHj1GDjzlCO0w==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "",
-                            TwoFactorEnabled = false,
-                            UserName = "client"
                         });
                 });
 
@@ -156,22 +141,22 @@ namespace Identity.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f5e7508d-e9fa-4cf8-8dbd-e6127c35bfa5",
-                            ConcurrencyStamp = "adcda3a8-d54e-4012-a29b-76b8a09c28c6",
+                            Id = "95bd9f40-29af-493a-9bc3-1fb626c5a611",
+                            ConcurrencyStamp = "386023eb-c3a8-47ab-9f8b-b20eefc90dc4",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "340fc3d0-5df4-49c3-9a11-b73ca56a5f17",
-                            ConcurrencyStamp = "562499d7-e958-4f37-bb35-ae87d5ea6d43",
+                            Id = "6a0f6d18-0881-490e-b4eb-b6a0575a89c3",
+                            ConcurrencyStamp = "4bd5e4ac-4b0f-448a-ad22-8854176d7b48",
                             Name = "cook",
                             NormalizedName = "COOK"
                         },
                         new
                         {
-                            Id = "d7f83458-796b-4038-9534-470f54f564b0",
-                            ConcurrencyStamp = "c56a09a9-2b9d-4ab5-a82f-35d0aa63f425",
+                            Id = "b2e54531-402c-4807-84e1-3a6cbc515507",
+                            ConcurrencyStamp = "7491fbeb-044f-4055-9c63-8741cd75a650",
                             Name = "client",
                             NormalizedName = "CLIENT"
                         });
@@ -225,50 +210,6 @@ namespace Identity.Server.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-                            ClaimValue = "admin",
-                            UserId = "32131582-161e-4a1a-a696-5df7af15bda0"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor",
-                            ClaimValue = "32131582-161e-4a1a-a696-5df7af15bda0",
-                            UserId = "32131582-161e-4a1a-a696-5df7af15bda0"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-                            ClaimValue = "admin@example.com",
-                            UserId = "32131582-161e-4a1a-a696-5df7af15bda0"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-                            ClaimValue = "client",
-                            UserId = "d33c3f10-ba31-4086-ab7b-048f2888e7a3"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor",
-                            ClaimValue = "d33c3f10-ba31-4086-ab7b-048f2888e7a3",
-                            UserId = "d33c3f10-ba31-4086-ab7b-048f2888e7a3"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-                            ClaimValue = "client@example.com",
-                            UserId = "d33c3f10-ba31-4086-ab7b-048f2888e7a3"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -310,13 +251,8 @@ namespace Identity.Server.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "32131582-161e-4a1a-a696-5df7af15bda0",
-                            RoleId = "f5e7508d-e9fa-4cf8-8dbd-e6127c35bfa5"
-                        },
-                        new
-                        {
-                            UserId = "d33c3f10-ba31-4086-ab7b-048f2888e7a3",
-                            RoleId = "d7f83458-796b-4038-9534-470f54f564b0"
+                            UserId = "554b8926-041e-47ec-bece-ba4b1698cbc0",
+                            RoleId = "95bd9f40-29af-493a-9bc3-1fb626c5a611"
                         });
                 });
 

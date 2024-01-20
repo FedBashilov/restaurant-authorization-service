@@ -15,6 +15,13 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Users.Service", "Users.Service\Users.Service.csproj", "{3E386525-9BEE-427A-B599-24D13370890A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1BCF7B1D-27DB-4AD4-81CE-BC825CB3A5B3}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose\common-services.yml = docker-compose\common-services.yml
+		docker-compose\docker-compose.yml = docker-compose\docker-compose.yml
+		Dockerfile = Dockerfile
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +44,8 @@ Global
 		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3062310-9D1A-4838-8829-71052FDF3327}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3062310-9D1A-4838-8829-71052FDF3327}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E386525-9BEE-427A-B599-24D13370890A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E386525-9BEE-427A-B599-24D13370890A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E386525-9BEE-427A-B599-24D13370890A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,7 +60,6 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Shared\Shared.projitems*{3e386525-9bee-427a-b599-24d13370890a}*SharedItemsImports = 5
 		Shared\Shared.projitems*{4e69fe8c-d80e-4baa-b19b-7ac192b9cc75}*SharedItemsImports = 5
-		Shared\Shared.projitems*{5b03ac93-2714-4e98-ac0d-3ece28db4141}*SharedItemsImports = 5
 		Shared\Shared.projitems*{b148f1fe-1232-43df-b6d5-802a71341123}*SharedItemsImports = 5
 		Shared\Shared.projitems*{d9e516b3-3ce9-467b-a15c-81faf6f3e3e7}*SharedItemsImports = 5
 		Shared\Shared.projitems*{f3062310-9d1a-4838-8829-71052fdf3327}*SharedItemsImports = 13

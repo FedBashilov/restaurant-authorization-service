@@ -9,20 +9,8 @@ services:
             - "5236:80"
         build: '../'
         environment:
-            ConnectionStrings__DatabaseConnection: 'Data Source=auth_db; Initial Catalog=AuthorizationService; User ID=SA; Password=Adminadmin1@'
-        depends_on:
-            - db
-        networks:
-            - app_bridge_network
-    db:
-        image: "mcr.microsoft.com/mssql/server:2019-latest"
-        container_name: auth_db
-        ports:
-            - "1433:1433"
-        environment:
-            - ACCEPT_EULA=y
-            - MSSQL_SA_PASSWORD=Adminadmin1@
-
+            ConnectionStrings__DatabaseConnection: 'Data Source=mssql_server; Initial Catalog=AuthorizationService; User ID=SA; Password=Adminadmin1@'
+            MailSettings__Password: ''
         networks:
             - app_bridge_network
 
