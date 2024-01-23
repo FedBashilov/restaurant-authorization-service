@@ -3,18 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authorization.Service", "Authorization.Service\Authorization.Service.csproj", "{D9E516B3-3CE9-467B-A15C-81FAF6F3E3E7}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Core", "Infrastructure.Core\Infrastructure.Core.csproj", "{5B03AC93-2714-4E98-AC0D-3ECE28DB4141}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Database", "Infrastructure.Database\Infrastructure.Database.csproj", "{B148F1FE-1232-43DF-B6D5-802A71341123}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Facade", "Web.Facade\Web.Facade.csproj", "{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{F3062310-9D1A-4838-8829-71052FDF3327}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Users.Service", "Users.Service\Users.Service.csproj", "{3E386525-9BEE-427A-B599-24D13370890A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1BCF7B1D-27DB-4AD4-81CE-BC825CB3A5B3}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose\common-services.yml = docker-compose\common-services.yml
@@ -22,34 +10,44 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Core", "Infrastructure.Core\Infrastructure.Core.csproj", "{2528221B-0CCB-4354-B669-C4B1100DA73B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Database", "Infrastructure.Database\Infrastructure.Database.csproj", "{ED1E43D5-D642-4CA4-B8DA-5FD6E81B5495}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authorization.Service", "Authorization.Service\Authorization.Service.csproj", "{B68C5060-BAF8-4A9B-A3C4-C1E0810F33C9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Users.Service", "Users.Service\Users.Service.csproj", "{4E231FA2-4364-42EB-8F5E-92F9F224E884}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{F3062310-9D1A-4838-8829-71052FDF3327}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Facade", "Web.Facade\Web.Facade.csproj", "{E09BDF07-2A0A-4705-A80D-D995D32D40F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D9E516B3-3CE9-467B-A15C-81FAF6F3E3E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D9E516B3-3CE9-467B-A15C-81FAF6F3E3E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D9E516B3-3CE9-467B-A15C-81FAF6F3E3E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D9E516B3-3CE9-467B-A15C-81FAF6F3E3E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5B03AC93-2714-4E98-AC0D-3ECE28DB4141}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5B03AC93-2714-4E98-AC0D-3ECE28DB4141}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5B03AC93-2714-4E98-AC0D-3ECE28DB4141}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5B03AC93-2714-4E98-AC0D-3ECE28DB4141}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B148F1FE-1232-43DF-B6D5-802A71341123}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B148F1FE-1232-43DF-B6D5-802A71341123}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B148F1FE-1232-43DF-B6D5-802A71341123}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B148F1FE-1232-43DF-B6D5-802A71341123}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E69FE8C-D80E-4BAA-B19B-7AC192B9CC75}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F3062310-9D1A-4838-8829-71052FDF3327}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F3062310-9D1A-4838-8829-71052FDF3327}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3E386525-9BEE-427A-B599-24D13370890A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3E386525-9BEE-427A-B599-24D13370890A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3E386525-9BEE-427A-B599-24D13370890A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3E386525-9BEE-427A-B599-24D13370890A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2528221B-0CCB-4354-B669-C4B1100DA73B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2528221B-0CCB-4354-B669-C4B1100DA73B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2528221B-0CCB-4354-B669-C4B1100DA73B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2528221B-0CCB-4354-B669-C4B1100DA73B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED1E43D5-D642-4CA4-B8DA-5FD6E81B5495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED1E43D5-D642-4CA4-B8DA-5FD6E81B5495}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED1E43D5-D642-4CA4-B8DA-5FD6E81B5495}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED1E43D5-D642-4CA4-B8DA-5FD6E81B5495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B68C5060-BAF8-4A9B-A3C4-C1E0810F33C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B68C5060-BAF8-4A9B-A3C4-C1E0810F33C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B68C5060-BAF8-4A9B-A3C4-C1E0810F33C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B68C5060-BAF8-4A9B-A3C4-C1E0810F33C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E231FA2-4364-42EB-8F5E-92F9F224E884}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E231FA2-4364-42EB-8F5E-92F9F224E884}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E231FA2-4364-42EB-8F5E-92F9F224E884}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E231FA2-4364-42EB-8F5E-92F9F224E884}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E09BDF07-2A0A-4705-A80D-D995D32D40F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E09BDF07-2A0A-4705-A80D-D995D32D40F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E09BDF07-2A0A-4705-A80D-D995D32D40F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E09BDF07-2A0A-4705-A80D-D995D32D40F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,10 +56,11 @@ Global
 		SolutionGuid = {BBE604D5-A971-40CC-97DE-8716F83283BA}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Shared\Shared.projitems*{3e386525-9bee-427a-b599-24d13370890a}*SharedItemsImports = 5
-		Shared\Shared.projitems*{4e69fe8c-d80e-4baa-b19b-7ac192b9cc75}*SharedItemsImports = 5
-		Shared\Shared.projitems*{b148f1fe-1232-43df-b6d5-802a71341123}*SharedItemsImports = 5
-		Shared\Shared.projitems*{d9e516b3-3ce9-467b-a15c-81faf6f3e3e7}*SharedItemsImports = 5
+		Shared\Shared.projitems*{2528221b-0ccb-4354-b669-c4b1100da73b}*SharedItemsImports = 5
+		Shared\Shared.projitems*{4e231fa2-4364-42eb-8f5e-92f9f224e884}*SharedItemsImports = 5
+		Shared\Shared.projitems*{b68c5060-baf8-4a9b-a3c4-c1e0810f33c9}*SharedItemsImports = 5
+		Shared\Shared.projitems*{e09bdf07-2a0a-4705-a80d-d995d32d40f0}*SharedItemsImports = 5
+		Shared\Shared.projitems*{ed1e43d5-d642-4ca4-b8da-5fd6e81b5495}*SharedItemsImports = 5
 		Shared\Shared.projitems*{f3062310-9d1a-4838-8829-71052fdf3327}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
