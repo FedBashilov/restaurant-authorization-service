@@ -10,6 +10,8 @@ namespace Authorization.Service
     using Authorization.Service.Models;
     using Authorization.Service.Models.DTOs;
     using Authorization.Service.Models.Responses;
+    using Google.Apis.Auth;
+    using Infrastructure.Core.Constants;
     using Infrastructure.Core.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Options;
@@ -153,6 +155,52 @@ namespace Authorization.Service
             if (!result.Succeeded)
             {
                 throw new InvalidEmailTokenException("Invalid email token.");
+            }
+        }
+
+        public async Task<AuthResponse> VerifyGoogle(string token, string userRole = UserRoles.Client)
+        {
+            try
+            {
+                var payload = await GoogleJsonWebSignature.ValidateAsync(token);
+
+                var user = await this.userManager.FindByEmailAsync(payload.Email);
+                if (user == null)
+                {
+                    var newUser = new User()
+                    {
+                        Email = payload.Email,
+                        Name = payload.Name,
+                        UserName = payload.Email,
+                    };
+
+                    var result = await this.userManager.CreateAsync(newUser);
+
+                    if (!result.Succeeded)
+                    {
+                        throw new RegisterFailedException(string.Join(";", result.Errors.ToList().Select(e => e.Description)));
+                    }
+
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Role, userRole),
+                        new Claim(ClaimTypes.Actor, newUser.Id.ToString()),
+                        new Claim(ClaimTypes.Email, newUser.Email),
+                    };
+
+                    await this.userManager.AddToRoleAsync(newUser, userRole);
+                    await this.userManager.AddClaimsAsync(newUser, claims);
+
+                    user = newUser;
+                }
+
+                var tokens = await this.GetTokens(user);
+
+                return tokens;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to verify Google OAuth token. " + ex.Message);
             }
         }
 

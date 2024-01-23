@@ -159,6 +159,9 @@
   <data name="RefreshToken is required" xml:space="preserve">
     <value>RefreshToken обязателен</value>
   </data>
+  <data name="Token is required" xml:space="preserve">
+    <value>Token обязателен</value>
+  </data>
   <data name="Unexpected server error" xml:space="preserve">
     <value>Неожиданная ошибка сервера</value>
   </data>

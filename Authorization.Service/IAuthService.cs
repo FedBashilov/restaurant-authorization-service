@@ -4,6 +4,7 @@ namespace Authorization.Service
 {
     using Authorization.Service.Models.DTOs;
     using Authorization.Service.Models.Responses;
+    using Infrastructure.Core.Constants;
     using Infrastructure.Core.Models;
 
     public interface IAuthService
@@ -15,5 +16,7 @@ namespace Authorization.Service
         public Task<AuthResponse> RefreshTokens(string accessToken, string refreshToken);
 
         public Task VerifyMail(string userId, string token);
+
+        public Task<AuthResponse> VerifyGoogle(string token, string userRole = UserRoles.Client);
     }
 }

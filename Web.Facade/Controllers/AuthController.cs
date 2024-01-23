@@ -210,6 +210,8 @@ namespace Web.Facade.Controllers
         }
 
         [HttpGet("verify")]
+        [ProducesResponseType(200, Type = typeof(string))]
+        [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> Verify(
             [FromQuery] string userId,
             [FromQuery] string emailToken)
@@ -219,6 +221,31 @@ namespace Web.Facade.Controllers
                 await this.authService.VerifyMail(userId, emailToken);
 
                 return this.Ok("You have successfully verified your account email! \nNow go back to our app and choose some delicious food ;)");
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, $"Can't verify user. {ex.Message}");
+                return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
+            }
+        }
+
+        [HttpPost("verify-google")]
+        [ProducesResponseType(200, Type = typeof(AuthResponse))]
+        [ProducesResponseType(400, Type = typeof(ErrorResponse))]
+        [ProducesResponseType(500, Type = typeof(ErrorResponse))]
+        public async Task<IActionResult> VerifyGoogle(
+        [FromBody] VerifyGoogleDTO verifyGoogleDto)
+        {
+            if (!VerifyGoogleDTO.IsValidModel(verifyGoogleDto, out var errorMessage))
+            {
+                return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
+            }
+
+            try
+            {
+                var tokens = await this.authService.VerifyGoogle(verifyGoogleDto.Token);
+
+                return this.Ok(tokens);
             }
             catch (Exception ex)
             {
