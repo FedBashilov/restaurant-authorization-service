@@ -11,6 +11,9 @@ services:
         environment:
             ConnectionStrings__DatabaseConnection: 'Data Source=mssql_server; Initial Catalog=AuthorizationService; User ID=SA; Password=Adminadmin1@'
             MailSettings__Password: ''
+            CloudinarySettings__Cloud: ''
+            CloudinarySettings__ApiKey: ''
+            CloudinarySettings__ApiSecret: ''
         networks:
             - app_bridge_network
 

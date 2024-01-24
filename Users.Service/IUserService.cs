@@ -7,5 +7,7 @@ namespace Users.Service
     public interface IUserService
     {
         public Task<UserResponse> GetUserInfo(string userId);
+
+        public Task<UserResponse> UpdateUserInfo(string userId, UpdateUserInfoDTO updateUserDto);
     }
 }

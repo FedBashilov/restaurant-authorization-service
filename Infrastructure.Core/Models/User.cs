@@ -7,5 +7,7 @@ namespace Infrastructure.Core.Models
     public class User : IdentityUser
     {
         public string? Name { get; set; }
+
+        public string? ImageUrl { get; set; }
     }
 }

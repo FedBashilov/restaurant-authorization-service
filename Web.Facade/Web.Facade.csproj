@@ -30,6 +30,7 @@
     
   <ItemGroup>
     <ProjectReference Include="..\Authorization.Service\Authorization.Service.csproj" />
+    <ProjectReference Include="..\CloudStorage.Service\CloudStorage.Service.csproj" />
     <ProjectReference Include="..\Users.Service\Users.Service.csproj" />
   </ItemGroup>
 

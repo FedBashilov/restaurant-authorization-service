@@ -48,5 +48,27 @@ namespace Web.Facade.Controllers
                 return this.StatusCode(500, new ErrorResponse("Unexpected server error"));
             }
         }
+
+        [Authorize(Roles = $"{UserRoles.Client}, {UserRoles.Cook}, {UserRoles.Admin}")]
+        [HttpPut("_me")]
+        [ProducesResponseType(200, Type = typeof(UserResponse))]
+        [ProducesResponseType(500, Type = typeof(ErrorResponse))]
+        public async Task<IActionResult> UpdateUserInfo([FromBody] UpdateUserInfoDTO updateUserDto)
+        {
+            try
+            {
+                var accessToken = await this.HttpContext.GetTokenAsync("access_token");
+                var userId = JwtService.GetClaimValue(accessToken, ClaimTypes.Actor);
+
+                var userInfo = await this.userService.UpdateUserInfo(userId, updateUserDto);
+
+                return this.Ok(userInfo);
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, $"Can't update user info. {ex.Message}");
+                return this.StatusCode(500, new ErrorResponse("Unexpected server error"));
+            }
+        }
     }
 }

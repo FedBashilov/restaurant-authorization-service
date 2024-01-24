@@ -3,6 +3,7 @@
 namespace Web.Facade
 {
     using Authorization.Service.Extentions;
+    using CloudStorage.Service.Extentions;
     using Infrastructure.Database.Extentions;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OpenApi.Models;
@@ -23,6 +24,7 @@ namespace Web.Facade
             services.AddDatabaseServices(this.Configuration);
             services.AddAuthServices(this.Configuration);
             services.AddUserServices(this.Configuration);
+            services.AddCloudStorageServices(this.Configuration);
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 

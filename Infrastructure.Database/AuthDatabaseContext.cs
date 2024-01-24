@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace Infrastructure.Database.Models
+namespace Infrastructure.Database
 {
     using Infrastructure.Core.Models;
     using Microsoft.AspNetCore.Identity;
@@ -10,7 +10,7 @@ namespace Infrastructure.Database.Models
     public class AuthDatabaseContext : IdentityDbContext<User>
     {
         public AuthDatabaseContext(DbContextOptions<AuthDatabaseContext> options)
-            : base(options) => this.Database.EnsureCreated();
+            : base(options) => Database.EnsureCreated();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,6 +18,9 @@ namespace Infrastructure.Database.Models
             modelBuilder.Entity<User>()
                 .Property(e => e.Name)
                 .HasMaxLength(250);
+            modelBuilder.Entity<User>()
+                .Property(e => e.ImageUrl)
+                .HasMaxLength(256);
 
             //// Seed data
             var adminRoleId = Guid.NewGuid().ToString();

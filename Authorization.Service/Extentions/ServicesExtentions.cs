@@ -6,7 +6,7 @@ namespace Authorization.Service.Extentions
     using Authorization.Service;
     using Authorization.Service.Models;
     using Infrastructure.Core.Models;
-    using Infrastructure.Database.Models;
+    using Infrastructure.Database;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Configuration;

@@ -2,7 +2,7 @@
 
 namespace Infrastructure.Database.Extentions
 {
-    using Infrastructure.Database.Models;
+    using Infrastructure.Database;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
