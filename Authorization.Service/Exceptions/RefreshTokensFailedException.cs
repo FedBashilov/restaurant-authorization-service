@@ -2,18 +2,18 @@
 
 namespace Authorization.Service.Exceptions
 {
-    public class InvalidRefreshTokenException : Exception
+    public class RefreshTokensFailedException : Exception
     {
-        public InvalidRefreshTokenException()
+        public RefreshTokensFailedException()
         {
         }
 
-        public InvalidRefreshTokenException(string message)
+        public RefreshTokensFailedException(string message)
             : base(message)
         {
         }
 
-        public InvalidRefreshTokenException(string message, Exception inner)
+        public RefreshTokensFailedException(string message, Exception inner)
             : base(message, inner)
         {
         }

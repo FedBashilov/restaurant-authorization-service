@@ -13,17 +13,16 @@ namespace Web.Facade.Middlewares
         private readonly RequestDelegate next;
 
         public HttpRequestBodyMiddleware(
-            ILogger<HttpRequestBodyMiddleware> logger,
-            RequestDelegate next)
+            RequestDelegate next,
+            ILogger<HttpRequestBodyMiddleware> logger)
         {
-            this.logger = logger;
             this.next = next;
+            this.logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
         {
             context.Request.EnableBuffering();
-
             var reader = new StreamReader(context.Request.Body);
 
             string body = await reader.ReadToEndAsync();

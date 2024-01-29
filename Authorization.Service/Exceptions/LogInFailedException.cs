@@ -2,18 +2,18 @@
 
 namespace Authorization.Service.Exceptions
 {
-    public class WrongPasswordException : Exception
+    public class LogInFailedException : Exception
     {
-        public WrongPasswordException()
+        public LogInFailedException()
         {
         }
 
-        public WrongPasswordException(string message)
+        public LogInFailedException(string message)
             : base(message)
         {
         }
 
-        public WrongPasswordException(string message, Exception inner)
+        public LogInFailedException(string message, Exception inner)
             : base(message, inner)
         {
         }

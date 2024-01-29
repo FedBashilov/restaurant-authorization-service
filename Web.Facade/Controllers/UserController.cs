@@ -7,6 +7,7 @@ namespace Web.Facade.Controllers
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
     using Users.Service;
     using Users.Service.Models.Responses;
     using Web.Facade.Models.Responses;
@@ -16,13 +17,16 @@ namespace Web.Facade.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
+        private readonly IStringLocalizer<AuthController> localizer;
 
         private readonly ILogger<UserController> logger;
 
         public UserController(
             IUserService userService,
+            IStringLocalizer<AuthController> localizer,
             ILogger<UserController> logger)
         {
+            this.localizer = localizer;
             this.userService = userService;
             this.logger = logger;
         }
@@ -30,23 +34,16 @@ namespace Web.Facade.Controllers
         [Authorize(Roles = $"{UserRoles.Client}, {UserRoles.Cook}, {UserRoles.Admin}")]
         [HttpGet("_me")]
         [ProducesResponseType(200, Type = typeof(UserResponse))]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> GetUserInfo()
         {
-            try
-            {
-                var accessToken = await this.HttpContext.GetTokenAsync("access_token");
-                var userId = JwtService.GetClaimValue(accessToken, ClaimTypes.Actor);
+            var accessToken = await this.HttpContext.GetTokenAsync("access_token");
+            var userId = JwtService.GetClaimValue(accessToken, ClaimTypes.Actor);
 
-                var userInfo = await this.userService.GetUserInfo(userId);
+            var userInfo = await this.userService.GetUserInfo(userId);
 
-                return this.Ok(userInfo);
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, $"Can't get user info. {ex.Message}");
-                return this.StatusCode(500, new ErrorResponse("Unexpected server error"));
-            }
+            return this.Ok(userInfo);
         }
 
         [Authorize(Roles = $"{UserRoles.Client}, {UserRoles.Cook}, {UserRoles.Admin}")]
@@ -55,20 +52,17 @@ namespace Web.Facade.Controllers
         [ProducesResponseType(500, Type = typeof(ErrorResponse))]
         public async Task<IActionResult> UpdateUserInfo([FromBody] UpdateUserInfoDTO updateUserDto)
         {
-            try
+            if (!UpdateUserInfoDTO.IsValidModel(updateUserDto, out var errorMessage))
             {
-                var accessToken = await this.HttpContext.GetTokenAsync("access_token");
-                var userId = JwtService.GetClaimValue(accessToken, ClaimTypes.Actor);
-
-                var userInfo = await this.userService.UpdateUserInfo(userId, updateUserDto);
-
-                return this.Ok(userInfo);
+                return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
             }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, $"Can't update user info. {ex.Message}");
-                return this.StatusCode(500, new ErrorResponse("Unexpected server error"));
-            }
+
+            var accessToken = await this.HttpContext.GetTokenAsync("access_token");
+            var userId = JwtService.GetClaimValue(accessToken, ClaimTypes.Actor);
+
+            var userInfo = await this.userService.UpdateUserInfo(userId, updateUserDto);
+
+            return this.Ok(userInfo);
         }
     }
 }

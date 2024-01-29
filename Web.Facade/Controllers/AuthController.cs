@@ -2,9 +2,7 @@
 
 namespace Web.Facade.Controllers
 {
-    using System.Text;
     using Authorization.Service;
-    using Authorization.Service.Exceptions;
     using Authorization.Service.Models.DTOs;
     using Authorization.Service.Models.Responses;
     using Infrastructure.Core.Constants;
@@ -43,31 +41,9 @@ namespace Web.Facade.Controllers
                 return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
             }
 
-            try
-            {
-                var newUser = await this.authService.Register(userDto, UserRoles.Client);
-                newUser.PasswordHash = null;
+            var newUser = await this.authService.Register(userDto, UserRoles.Client);
 
-                return this.Ok(newUser);
-            }
-            catch (RegisterFailedException ex)
-            {
-                this.logger.LogWarning(ex, $"Can't register user. {ex.Message}");
-
-                var messages = ex.Message.Split(";");
-                var messageBuilder = new StringBuilder();
-                foreach (var message in messages)
-                {
-                    messageBuilder.AppendLine(this.localizer[message].Value);
-                }
-
-                return this.BadRequest(new ErrorResponse(messageBuilder.ToString()));
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, $"Can't register user. {ex.Message}");
-                return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
-            }
+            return this.Ok(newUser);
         }
 
         [Authorize(Roles = UserRoles.Admin)]
@@ -82,31 +58,9 @@ namespace Web.Facade.Controllers
                 return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
             }
 
-            try
-            {
-                var newUser = await this.authService.Register(userDto, UserRoles.Cook);
-                newUser.PasswordHash = null;
+            var newUser = await this.authService.Register(userDto, UserRoles.Cook);
 
-                return this.Ok(newUser);
-            }
-            catch (RegisterFailedException ex)
-            {
-                this.logger.LogWarning(ex, $"Can't register user. {ex.Message}");
-
-                var messages = ex.Message.Split(" ");
-                var messageBuilder = new StringBuilder();
-                foreach (var message in messages)
-                {
-                    messageBuilder.AppendLine(this.localizer[message].Value);
-                }
-
-                return this.BadRequest(new ErrorResponse(messageBuilder.ToString()));
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, $"Can't register user. {ex.Message}");
-                return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
-            }
+            return this.Ok(newUser);
         }
 
         [Authorize(Roles = UserRoles.Admin)]
@@ -121,31 +75,9 @@ namespace Web.Facade.Controllers
                 return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
             }
 
-            try
-            {
-                var newUser = await this.authService.Register(userDto, UserRoles.Admin);
-                newUser.PasswordHash = null;
+            var newUser = await this.authService.Register(userDto, UserRoles.Admin);
 
-                return this.Ok(newUser);
-            }
-            catch (RegisterFailedException ex)
-            {
-                this.logger.LogWarning(ex, $"Can't register user. {ex.Message}");
-
-                var messages = ex.Message.Split(" ");
-                var messageBuilder = new StringBuilder();
-                foreach (var message in messages)
-                {
-                    messageBuilder.AppendLine(this.localizer[message].Value);
-                }
-
-                return this.BadRequest(new ErrorResponse(messageBuilder.ToString()));
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, $"Can't register user. {ex.Message}");
-                return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
-            }
+            return this.Ok(newUser);
         }
 
         [HttpPost("refresh-token")]
@@ -159,22 +91,9 @@ namespace Web.Facade.Controllers
                 return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
             }
 
-            try
-            {
-                var tokens = await this.authService.RefreshTokens(refreshTokenDto.AccessToken!, refreshTokenDto.RefreshToken!);
-                return this.Ok(tokens);
-            }
-            catch (Exception ex)
-            {
-                if (ex is InvalidRefreshTokenException || ex is UserNotFoundException)
-                {
-                    this.logger.LogWarning(ex, $"Can't refresh user tokens. {ex.Message}");
-                    return this.BadRequest(new ErrorResponse(this.localizer["Invalid access or refresh tokens"].Value));
-                }
+            var tokens = await this.authService.RefreshTokens(refreshTokenDto.AccessToken!, refreshTokenDto.RefreshToken!);
 
-                this.logger.LogError(ex, $"Can't refresh user tokens. {ex.Message}");
-                return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
-            }
+            return this.Ok(tokens);
         }
 
         [HttpPost("login")]
@@ -188,25 +107,9 @@ namespace Web.Facade.Controllers
                 return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
             }
 
-            try
-            {
-                var tokens = await this.authService.LogIn(loginDto.Email!, loginDto.Password!);
-                return this.Ok(tokens);
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogWarning(ex, $"Can't log in user. {ex.Message}");
+            var tokens = await this.authService.LogIn(loginDto.Email!, loginDto.Password!);
 
-                return ex switch
-                {
-                    UserNotFoundException or WrongPasswordException =>
-                        this.BadRequest(new ErrorResponse(this.localizer["Wrong Email or Password"].Value)),
-                    EmailNotConfirmedException =>
-                        this.BadRequest(new ErrorResponse(this.localizer["Email not confirmed"].Value)),
-                    _ =>
-                        this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value)),
-                };
-            }
+            return this.Ok(tokens);
         }
 
         [HttpGet("verify")]
@@ -216,17 +119,9 @@ namespace Web.Facade.Controllers
             [FromQuery] string userId,
             [FromQuery] string emailToken)
         {
-            try
-            {
-                await this.authService.VerifyMail(userId, emailToken);
+            await this.authService.VerifyMail(userId, emailToken);
 
-                return this.Ok("You have successfully verified your account email! \nNow go back to our app and choose some delicious food ;)");
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, $"Can't verify user. {ex.Message}");
-                return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
-            }
+            return this.Ok("You have successfully verified your account email! \nNow go back to our app and choose some delicious food ;)");
         }
 
         [HttpPost("verify-google")]
@@ -241,17 +136,9 @@ namespace Web.Facade.Controllers
                 return this.BadRequest(new ErrorResponse(this.localizer[errorMessage].Value));
             }
 
-            try
-            {
-                var tokens = await this.authService.VerifyGoogle(verifyGoogleDto.Token);
+            var tokens = await this.authService.VerifyGoogle(verifyGoogleDto.Token!);
 
-                return this.Ok(tokens);
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, $"Can't verify user. {ex.Message}");
-                return this.StatusCode(500, new ErrorResponse(this.localizer["Unexpected server error"].Value));
-            }
+            return this.Ok(tokens);
         }
     }
 }

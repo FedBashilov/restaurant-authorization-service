@@ -69,7 +69,7 @@ namespace Web.Facade
             }
 
             app.UseMiddleware<HttpRequestBodyMiddleware>();
-            app.UseMiddleware<UnhandledExceptionMiddleware>();
+            app.UseMiddleware<ExceptionMiddleware>();
 
             var supportedCultures = new[] { "en-US", "ru-RU" };
             var localizationOptions =

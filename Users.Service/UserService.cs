@@ -2,6 +2,7 @@
 
 namespace Users.Service
 {
+    using CloudStorage.Service.Exceptions;
     using CloudStorage.Service.Interfaces;
     using Infrastructure.Core.Models;
     using Microsoft.AspNetCore.Identity;
@@ -43,32 +44,39 @@ namespace Users.Service
 
         public async Task<UserResponse> UpdateUserInfo(string userId, UpdateUserInfoDTO updateUserDto)
         {
-            var user = await this.userManager.FindByIdAsync(userId);
-
-            if (user == null)
+            try
             {
-                throw new UserNotFoundException();
+                var user = await this.userManager.FindByIdAsync(userId);
+
+                if (user == null)
+                {
+                    throw new UserNotFoundException();
+                }
+
+                user.Name = updateUserDto.Name;
+
+                if (updateUserDto.Image != default && updateUserDto.Image.Length != 0)
+                {
+                    var imageUrl = await this.cloudStorageService.UploadFile(updateUserDto.Image, "user", "/users");
+                    user.ImageUrl = imageUrl.ToString();
+                }
+
+                await this.userManager.UpdateAsync(user);
+
+                var userInfo = new UserResponse()
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Email = user.Email,
+                    ImageUrl = user.ImageUrl,
+                };
+
+                return userInfo;
             }
-
-            user.Name = updateUserDto.Name;
-
-            if (updateUserDto.Image != default && updateUserDto.Image.Length != 0)
+            catch (Exception ex)
             {
-                var imageUrl = await this.cloudStorageService.UploadFile(updateUserDto.Image, "user", "/users");
-                user.ImageUrl = imageUrl.ToString();
+                throw new UpdateUserFailedException(string.Empty, ex);
             }
-
-            await this.userManager.UpdateAsync(user);
-
-            var userInfo = new UserResponse()
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                ImageUrl = user.ImageUrl,
-            };
-
-            return userInfo;
         }
     }
 }

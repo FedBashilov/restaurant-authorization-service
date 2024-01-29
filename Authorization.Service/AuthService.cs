@@ -47,7 +47,7 @@ namespace Authorization.Service
             var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                throw new UserNotFoundException();
+                throw new RefreshTokensFailedException("Invalid access token");
             }
 
             var refreshTokenFromDb = await this.userManager.GetAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken");
@@ -55,7 +55,7 @@ namespace Authorization.Service
 
             if (!isValid || refreshToken != refreshTokenFromDb)
             {
-                throw new InvalidRefreshTokenException("Invalid refresh token.");
+                throw new RefreshTokensFailedException("Invalid refresh token");
             }
 
             await this.userManager.RemoveAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken");
@@ -109,6 +109,8 @@ namespace Authorization.Service
 
             await Task.WhenAll(tasks);
 
+            user.PasswordHash = null;
+
             return user;
         }
 
@@ -118,21 +120,21 @@ namespace Authorization.Service
 
             if (user == null)
             {
-                throw new UserNotFoundException();
+                throw new LogInFailedException("Wrong user");
             }
 
             var passwordCheckResult = await this.signInManager.CheckPasswordSignInAsync(user, password, false);
 
             if (!passwordCheckResult.Succeeded)
             {
-                throw new WrongPasswordException("Wrong password.");
+                throw new LogInFailedException("Wrong password");
             }
 
             var isEmailConfirmed = await this.userManager.IsEmailConfirmedAsync(user);
 
             if (!isEmailConfirmed)
             {
-                throw new EmailNotConfirmedException("Email not confirmed.");
+                throw new EmailNotConfirmedException("Email not confirmed");
             }
 
             await this.userManager.RemoveAuthenticationTokenAsync(user, "UserTokenProvider", "RefreshToken");
@@ -147,14 +149,14 @@ namespace Authorization.Service
             var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                throw new UserNotFoundException();
+                throw new EmailVerificationFailedException("User not found");
             }
 
             var result = await this.userManager.ConfirmEmailAsync(user, emailToken);
 
             if (!result.Succeeded)
             {
-                throw new InvalidEmailTokenException("Invalid email token.");
+                throw new EmailVerificationFailedException("Invalid email token");
             }
         }
 
@@ -200,7 +202,8 @@ namespace Authorization.Service
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to verify Google OAuth token. " + ex.Message);
+                throw new GoogleVerificationFailedException(
+                    "Failed to verify Google OAuth token. " + ex.Message, ex);
             }
         }
 
