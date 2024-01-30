@@ -13,6 +13,7 @@ COPY ["Authorization.Service/Authorization.Service.csproj", "Authorization.Servi
 COPY ["Infrastructure.Core/Infrastructure.Core.csproj", "Infrastructure.Core/"]
 COPY ["Infrastructure.Database/Infrastructure.Database.csproj", "Infrastructure.Database/"]
 COPY ["Users.Service/Users.Service.csproj", "Users.Service/"]
+COPY ["CloudStorage.Service/CloudStorage.Service.csproj", "CloudStorage.Service/"]
 RUN dotnet restore "Web.Facade/Web.Facade.csproj"
 COPY . .
 WORKDIR "/src/Web.Facade"

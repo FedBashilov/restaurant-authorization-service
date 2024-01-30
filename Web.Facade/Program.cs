@@ -2,6 +2,8 @@
 
 namespace Web.Facade
 {
+    using Serilog;
+
     public class Program
     {
         public static void Main(string[] args)
@@ -13,7 +15,8 @@ namespace Web.Facade
         {
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(
-                    webBuilder => webBuilder.UseStartup<Startup>());
+                    webBuilder => webBuilder.UseStartup<Startup>())
+                .UseSerilog();
         }
     }
 }

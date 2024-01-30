@@ -2,11 +2,18 @@
 
 namespace Web.Facade
 {
+    using System;
+    using System.Reflection;
     using Authorization.Service.Extentions;
     using CloudStorage.Service.Extentions;
     using Infrastructure.Database.Extentions;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.OpenApi.Models;
+    using Serilog;
+    using Serilog.Exceptions;
+    using Serilog.Sinks.Elasticsearch;
     using Users.Service.Extentions;
     using Web.Facade.Middlewares;
 
@@ -55,6 +62,23 @@ namespace Web.Facade
                     },
                 });
             });
+
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .Enrich.WithExceptionDetails()
+                .WriteTo.Debug()
+                .WriteTo.Console()
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(this.Configuration["ElasticConfiguration:Uri"]))
+                {
+                    AutoRegisterTemplate = true,
+                    IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}",
+                    NumberOfReplicas = 1,
+                    NumberOfShards = 2,
+                })
+                .Enrich.WithProperty("Enviroment", environment)
+                .ReadFrom.Configuration(this.Configuration)
+                .CreateLogger();
 
             services.AddControllers();
         }
