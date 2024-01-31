@@ -17,12 +17,12 @@ namespace Web.Facade.Middlewares
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly IStringLocalizer<AuthController> localizer;
+        private readonly IStringLocalizer<SharedResources> localizer;
         private readonly ILogger<ExceptionMiddleware> logger;
 
         public ExceptionMiddleware(
             RequestDelegate next,
-            IStringLocalizer<AuthController> localizer,
+            IStringLocalizer<SharedResources> localizer,
             ILogger<ExceptionMiddleware> logger)
         {
             this.next = next;

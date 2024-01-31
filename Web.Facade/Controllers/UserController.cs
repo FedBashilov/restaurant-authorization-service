@@ -17,13 +17,13 @@ namespace Web.Facade.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
-        private readonly IStringLocalizer<AuthController> localizer;
+        private readonly IStringLocalizer<SharedResources> localizer;
 
         private readonly ILogger<UserController> logger;
 
         public UserController(
             IUserService userService,
-            IStringLocalizer<AuthController> localizer,
+            IStringLocalizer<SharedResources> localizer,
             ILogger<UserController> logger)
         {
             this.localizer = localizer;

@@ -16,13 +16,13 @@ namespace Web.Facade.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authService;
-        private readonly IStringLocalizer<AuthController> localizer;
+        private readonly IStringLocalizer<SharedResources> localizer;
 
         private readonly ILogger<AuthController> logger;
 
         public AuthController(
             IAuthService authService,
-            IStringLocalizer<AuthController> localizer,
+            IStringLocalizer<SharedResources> localizer,
             ILogger<AuthController> logger)
         {
             this.authService = authService;
