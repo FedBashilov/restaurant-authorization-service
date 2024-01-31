@@ -42,7 +42,7 @@ namespace Authorization.Service
         public async Task<AuthResponse> RefreshTokens(string accessToken, string refreshToken)
         {
             var jwtToken = new JwtSecurityToken(accessToken);
-            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor")?.Value;
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Actor)?.Value;
 
             var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)
